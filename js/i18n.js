@@ -354,6 +354,10 @@ function updatePageContent() {
     document.querySelectorAll('[data-i18n-value]').forEach(el => {
       try { el.value = t(el.dataset.i18nValue); } catch (e) { console.warn('i18n value failed:', e.message); }
     });
+
+    document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+      try { el.setAttribute('aria-label', t(el.dataset.i18nAriaLabel)); } catch (e) { console.warn('i18n aria-label failed:', e.message); }
+    });
   } catch (e) { console.warn('updatePageContent failed:', e.message); }
 }
 
