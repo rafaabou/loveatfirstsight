@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollAnimations();
   initGalleryLightbox();
   initShareForm();
+  initContactForm();
   initBlogPost();
   setActiveNavLink();
   initRotatingQuotes();
@@ -232,6 +233,52 @@ function initRotatingQuotes() {
       el.style.opacity = '1';
     }, 300);
   }, 5000);
+}
+
+function initContactForm() {
+  const form = document.getElementById('contactForm');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const data = {
+      name: document.getElementById('contactName')?.value || '',
+      email: document.getElementById('contactEmail')?.value || '',
+      subject: document.getElementById('contactSubject')?.value || '',
+      message: document.getElementById('contactMessage')?.value || '',
+    };
+
+    if (!data.name.trim() || !data.email.trim() || !data.message.trim()) return;
+
+    const submitBtn = form.querySelector('.submit-btn');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Sending...';
+    submitBtn.disabled = true;
+
+    document.getElementById('contactFormSuccess').style.display = 'none';
+    document.getElementById('contactFormError').style.display = 'none';
+
+    try {
+      const res = await fetch(`${API_BASE}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        form.reset();
+        document.getElementById('contactFormSuccess').style.display = 'block';
+      } else {
+        document.getElementById('contactFormError').style.display = 'block';
+      }
+    } catch {
+      document.getElementById('contactFormError').style.display = 'block';
+    }
+
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+  });
 }
 
 // getLang and t are provided by i18n.js — do not redefine them here

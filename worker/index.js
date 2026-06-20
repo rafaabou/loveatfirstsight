@@ -147,6 +147,22 @@ export default {
           { headers: { 'Content-Type': 'text/html' } });
       }
 
+      // ── POST /api/contact — send contact message ──
+      if (url.pathname === '/api/contact' && method === 'POST') {
+        let body;
+        try { body = await request.json(); }
+        catch { return jsonResponse(corsHeaders, { error: 'Invalid JSON body' }, 400); }
+
+        const validation = validateContactInput(body);
+        if (!validation.valid) {
+          return jsonResponse(corsHeaders, { error: validation.error }, 400);
+        }
+
+        await sendContactEmail(validation.safe, env);
+
+        return jsonResponse(corsHeaders, { success: true });
+      }
+
       return jsonResponse(corsHeaders, { error: 'Not found' }, 404);
 
     } catch (err) {
@@ -198,6 +214,101 @@ async function checkRateLimit(KV, ip) {
   } catch {
     return true;
   }
+}
+
+// ─── Contact Validation ──────────────────────────────────────
+function validateContactInput(body) {
+  const name = String(body.name || '').trim().slice(0, 100);
+  const email = String(body.email || '').trim().slice(0, 254);
+  const subject = String(body.subject || 'No subject').trim().slice(0, 200);
+  const message = String(body.message || '').trim();
+
+  if (!name) return { valid: false, error: 'Name is required' };
+  if (!email) return { valid: false, error: 'Email is required' };
+  if (!isValidEmail(email)) return { valid: false, error: 'Invalid email format' };
+  if (!message) return { valid: false, error: 'Message is required' };
+  if (message.length > 5000) return { valid: false, error: 'Message too long (max 5000 characters)' };
+
+  return {
+    valid: true,
+    safe: {
+      name: stripHtml(name),
+      email: email,
+      subject: stripHtml(subject),
+      message: stripHtml(message),
+    },
+  };
+}
+
+async function sendContactEmail(data, env) {
+  const emailTo = env.EMAIL_TO || CFG.EMAIL_TO;
+  const siteUrl = env.SITE_URL || CFG.SITE_URL;
+
+  const text = [
+    'New contact message from the website:',
+    '',
+    `From: ${data.name}`,
+    `Email: ${data.email}`,
+    `Subject: ${data.subject}`,
+    '',
+    'Message:',
+    data.message,
+    '',
+    '─────────────────────',
+    `Reply to: ${data.email}`,
+  ].join('\n');
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="font-family:sans-serif;padding:20px;background:#f9f9f9;">
+  <div style="max-width:600px;margin:0 auto;background:white;border-radius:12px;padding:30px;box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+    <h2 style="color:#c0392b;">&#10084; New Contact Message</h2>
+    <table style="width:100%;border-collapse:collapse;margin:20px 0;">
+      <tr><td style="padding:8px;color:#666;">Name</td><td style="padding:8px;"><strong>${escapeHtml(data.name)}</strong></td></tr>
+      <tr><td style="padding:8px;color:#666;">Email</td><td style="padding:8px;"><a href="mailto:${escapeHtml(data.email)}">${escapeHtml(data.email)}</a></td></tr>
+      <tr><td style="padding:8px;color:#666;">Subject</td><td style="padding:8px;"><strong>${escapeHtml(data.subject)}</strong></td></tr>
+    </table>
+    <div style="background:#fff5f5;padding:20px;border-radius:8px;margin:20px 0;border-left:4px solid #c0392b;">
+      <p style="margin:0;line-height:1.7;">${escapeHtml(data.message).replace(/\n/g, '<br>')}</p>
+    </div>
+    <p style="color:#666;font-size:0.85rem;text-align:center;">Sent from ${escapeHtml(siteUrl)} &mdash; <a href="mailto:${escapeHtml(data.email)}">Reply to ${escapeHtml(data.name)}</a></p>
+  </div>
+</body>
+</html>`;
+
+  const method = env.EMAIL_METHOD || CFG.EMAIL_METHOD;
+
+  switch (method) {
+    case 'sendgrid':
+      await sendSendGridContact(env, emailTo, text, html, data);
+      break;
+    case 'resend':
+      await sendResendContact(env, emailTo, text, html, data);
+      break;
+    case 'mailgun':
+      await sendMailgunContact(env, emailTo, text, html, data);
+      break;
+    case 'console':
+    default:
+      console.log('=== CONTACT FORM MESSAGE ===');
+      console.log('To:', emailTo);
+      console.log('Subject: Contact: ' + data.subject);
+      console.log(text);
+      console.log('=== END ===');
+      break;
+  }
+}
+
+function sendSendGridContact(env, to, text, html, data) {
+  return sendSendGrid(env, to, text, html, { title: 'Contact: ' + data.subject });
+}
+function sendResendContact(env, to, text, html, data) {
+  return sendResend(env, to, text, html, { title: 'Contact: ' + data.subject });
+}
+function sendMailgunContact(env, to, text, html, data) {
+  return sendMailgun(env, to, text, html, { title: 'Contact: ' + data.subject });
 }
 
 // ─── Input Validation ────────────────────────────────────────

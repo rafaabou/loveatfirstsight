@@ -9,6 +9,7 @@ const translations = {
     tips: { en: 'Tips', fr: 'Conseils', ar: 'نصائح' },
     blog: { en: 'Blog', fr: 'Blog', ar: 'مدونة' },
     share: { en: 'Share', fr: 'Partager', ar: 'شارك' },
+    contact: { en: 'Contact', fr: 'Contact', ar: 'اتصل بنا' },
   },
   footer: {
     tagline: { en: 'Celebrating the magic of that one moment when two souls recognize each other.', fr: 'Célébrer la magie de cet instant où deux âmes se reconnaissent.', ar: 'احتفاء بسحر تلك اللحظة التي تتعرف فيها روحان على بعضهما.' },
@@ -177,6 +178,27 @@ const translations = {
   blogPost: {
     back: { en: 'Back to Blog', fr: 'Retour au blog', ar: 'العودة إلى المدونة' },
     notFound: { en: 'Post not found.', fr: 'Article non trouvé.', ar: 'المقال غير موجود.' },
+  },
+  contact: {
+    pageTitle: { en: 'Contact Us', fr: 'Contactez-nous', ar: 'اتصل بنا' },
+    pageSubtitle: { en: "We'd love to hear from you. Every message is read with care.", fr: 'Nous aimerions avoir de vos nouvelles. Chaque message est lu avec attention.', ar: 'يسعدنا التواصل معك. كل رسالة تقرأ بعناية.' },
+    intro: { en: 'Have a question about love at first sight? Want to share a thought, a story, or just say hello? Write to us. We read every single message.', fr: 'Vous avez une question sur le coup de foudre ? Vous voulez partager une pensée, une histoire ou simplement dire bonjour ? Écrivez-nous. Nous lisons chaque message.', ar: 'هل لديك سؤال عن الحب من أول نظرة؟ تريد مشاركة فكرة أو قصة أو مجرد إلقاء التحية؟ اكتب لنا. نقرأ كل رسالة.' },
+    form: {
+      name: { en: 'Your Name', fr: 'Votre nom', ar: 'اسمك' },
+      namePlaceholder: { en: 'Enter your name', fr: 'Entrez votre nom', ar: 'أدخل اسمك' },
+      email: { en: 'Your Email', fr: 'Votre email', ar: 'بريدك الإلكتروني' },
+      emailPlaceholder: { en: 'Enter your email', fr: 'Entrez votre email', ar: 'أدخل بريدك الإلكتروني' },
+      subject: { en: 'Subject', fr: 'Sujet', ar: 'الموضوع' },
+      subjectPlaceholder: { en: 'What is this about?', fr: 'De quoi s\'agit-il ?', ar: 'عن ماذا يتعلق؟' },
+      message: { en: 'Message', fr: 'Message', ar: 'الرسالة' },
+      messagePlaceholder: { en: 'Write your message here...', fr: 'Écrivez votre message ici...', ar: 'اكتب رسالتك هنا...' },
+      submit: { en: 'Send Message', fr: 'Envoyer le message', ar: 'أرسل الرسالة' },
+      success: { en: 'Thank you! Your message has been sent. We will get back to you soon.', fr: 'Merci ! Votre message a été envoyé. Nous vous répondrons bientôt.', ar: 'شكرًا لك! تم إرسال رسالتك. سنعود إليك قريبًا.' },
+      error: { en: 'Sorry, something went wrong. Please try again or email us directly at rafaabou@proton.me.', fr: 'Désolé, une erreur s\'est produite. Veuillez réessayer ou nous envoyer un email directement à rafaabou@proton.me.', ar: 'عذرًا، حدث خطأ ما. يرجى المحاولة مرة أخرى أو مراسلتنا مباشرة على rafaabou@proton.me.' },
+    },
+    emailTitle: { en: 'Email', fr: 'Email', ar: 'البريد الإلكتروني' },
+    responseTitle: { en: 'Response Time', fr: 'Délai de réponse', ar: 'وقت الرد' },
+    responseText: { en: 'We reply within 24-48 hours.', fr: 'Nous répondons sous 24 à 48 heures.', ar: 'نرد خلال 24-48 ساعة.' },
   },
 };
 
