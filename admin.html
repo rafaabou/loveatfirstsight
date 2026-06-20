@@ -285,7 +285,8 @@
         });
         if (!res.ok) throw new Error('Failed to generate tokens');
         const data = await res.json();
-        const text = `To review: "${story.title}"\n\nApprove: ${data.approveUrl}\nReject: ${data.rejectUrl}`;
+        const baseUrl = window.location.origin;
+        const text = `To review: "${story.title}"\n\nApprove: ${baseUrl}/api/admin/stories?action=approve&token=${data.approveToken}\nReject: ${baseUrl}/api/admin/stories?action=reject&token=${data.rejectToken}`;
         await navigator.clipboard.writeText(text);
         alert('One-time URLs copied to clipboard!');
       } catch (err) {
