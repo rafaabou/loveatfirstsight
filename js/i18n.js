@@ -30,6 +30,8 @@ const translations = {
       { en: '"The best thing to hold onto in life is each other." — Audrey Hepburn', fr: '"La meilleure chose à laquelle s\'accrocher dans la vie, c\'est l\'autre." — Audrey Hepburn', ar: '"أفضل شيء يمكن التمسك به في الحياة هو بعضنا البعض." — أودري هيبورن' },
       { en: '"It was at first sight, and forever." — Victor Hugo', fr: '"Ce fut dès le premier regard, et pour toujours." — Victor Hugo', ar: '"كان من أول نظرة، وإلى الأبد." — فيكتور هوجو' },
       { en: '"Love is not blind — it sees more, not less." — Rabbi Julius Gordon', fr: '"L\'amour n\'est pas aveugle — il voit plus, pas moins." — Julius Gordon', ar: '"الحب ليس أعمى — إنه يرى أكثر، لا أقل." — الحاخام يوليوس جوردون' },
+      { en: '"The most beautiful thing about love at first sight is that it needs no translation."', fr: '"La plus belle chose du coup de foudre est qu\'il n\'a besoin d\'aucune traduction."', ar: '"أجمل ما في الحب من أول نظرة أنه لا يحتاج إلى ترجمة."' },
+      { en: '"Your body has decided before your conscious mind has caught up."', fr: '"Votre corps a décidé avant que votre esprit conscient n\'ait eu le temps de comprendre."', ar: '"لقد قرر جسدك قبل أن يدرك عقلك الواعي."' },
     ],
     featureCards: [
       { title: { en: 'What Is Love at First Sight?', fr: "Qu'est-ce que le coup de foudre ?", ar: 'ما هو الحب من أول نظرة؟' }, desc: { en: 'A look at the meaning, history, and magic behind that electric moment.', fr: 'Un regard sur la signification, l\'histoire et la magie derrière cet instant électrique.', ar: 'نظرة على المعنى والتاريخ والسحر وراء تلك اللحظة الكهربائية.' }, link: 'what-is.html' },
@@ -129,6 +131,7 @@ const translations = {
     videoDesc: { en: 'A collection of short films and scenes that capture the magic.', fr: 'Une collection de courts métrages et de scènes qui capturent la magie.', ar: 'مجموعة من الأفلام القصيرة والمشاهد التي تلتقط السحر.' },
     photoGallery: { en: 'Photo Gallery', fr: 'Galerie photo', ar: 'معرض الصور' },
     photoDesc: { en: 'Click any image to expand', fr: 'Cliquez sur une image pour agrandir', ar: 'انقر على أي صورة للتكبير' },
+    videoUnavailable: { en: 'Video unavailable', fr: 'Vidéo indisponible', ar: 'الفيديو غير متاح' },
   },
   tips: {
     pageTitle: { en: 'Tips to Make It Happen', fr: 'Conseils pour que ça arrive', ar: 'نصائح لجعلها تحدث' },
