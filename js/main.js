@@ -15,14 +15,16 @@ function initMobileMenu() {
   if (!hamburger || !nav) return;
 
   hamburger.addEventListener('click', () => {
+    const isOpen = nav.classList.toggle('open');
     hamburger.classList.toggle('active');
-    nav.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded', isOpen);
   });
 
   document.querySelectorAll('.nav-links a').forEach(link => {
     link.addEventListener('click', () => {
       hamburger.classList.remove('active');
       nav.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
     });
   });
 }
@@ -54,21 +56,30 @@ function initGalleryLightbox() {
   const closeBtn = lightbox?.querySelector('.lightbox-close');
   if (!lightbox) return;
 
+  const closeLightbox = () => lightbox.classList.remove('active');
+
   document.querySelectorAll('.gallery-item').forEach(item => {
     item.addEventListener('click', () => {
       const img = item.querySelector('img');
       if (!img) return;
       lightboxImg.src = img.dataset.full || img.src;
       lightbox.classList.add('active');
+      lightbox.focus();
     });
   });
 
   if (closeBtn) {
-    closeBtn.addEventListener('click', () => lightbox.classList.remove('active'));
+    closeBtn.addEventListener('click', closeLightbox);
   }
 
   lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) lightbox.classList.remove('active');
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+      closeLightbox();
+    }
   });
 }
 
@@ -183,6 +194,8 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
+let blogContentCache = null;
+
 function initBlogPost() {
   const container = document.getElementById('blogPostContent');
   if (!container) return;
@@ -211,7 +224,24 @@ function initBlogPost() {
     img.alt = post.title[lang] || post.title.en;
   }
 
-  document.getElementById('postBody').innerHTML = post.content[lang] || post.content.en;
+  const renderContent = (content) => {
+    document.getElementById('postBody').innerHTML = content[lang] || content.en || '<p>Content not available.</p>';
+  };
+
+  if (blogContentCache) {
+    renderContent(blogContentCache[postId]);
+    return;
+  }
+
+  fetch('data/blog-content.json')
+    .then(r => r.json())
+    .then(data => {
+      blogContentCache = data;
+      renderContent(data[postId] || post.content || {});
+    })
+    .catch(() => {
+      renderContent(post.content || {});
+    });
 }
 
 function initRotatingQuotes() {

@@ -995,6 +995,10 @@ ul { list-style: none; }
     min-height: 200px;
   }
 
+  .header-actions {
+    display: none;
+  }
+
   .video-grid {
     grid-template-columns: 1fr;
   }
@@ -1049,6 +1053,37 @@ ul { list-style: none; }
   }
 }
 
+/* ========== SKIP LINK ========== */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 20px;
+  z-index: 9999;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.3s ease;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* ========== NOSCRIPT ========== */
+.noscript-banner {
+  background: #e74c3c;
+  color: #fff;
+  text-align: center;
+  padding: 12px 20px;
+  font-size: 0.9rem;
+}
+
+/* ========== LIGHTBOX FIXES ========== */
+.lightbox:focus {
+  outline: none;
+}
+
 /* ========== ANIMATIONS ========== */
 .fade-in {
   opacity: 0;
@@ -1079,4 +1114,20 @@ ul { list-style: none; }
   color: var(--text-light);
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+/* ========== REDUCED MOTION ========== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .fade-in {
+    opacity: 1;
+    transform: none;
+  }
 }

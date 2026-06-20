@@ -45,6 +45,8 @@
   </style>
 </head>
 <body>
+<a href="#main" class="skip-link">Skip to content</a>
+<noscript><div class="noscript-banner">JavaScript is not enabled. Some features like theme switching and translations may not work.</div></noscript>
   <div class="container">
     <!-- Login -->
     <div id="loginSection" class="admin-login">
@@ -94,6 +96,7 @@
       token = document.getElementById('adminTokenInput').value.trim();
       if (!token) return;
       document.getElementById('loginError').style.display = 'none';
+      try { sessionStorage.setItem('adminToken', token); } catch(e) {}
       fetchStories();
     }
 
@@ -103,12 +106,15 @@
       document.getElementById('loginSection').style.display = 'block';
       document.getElementById('adminPanel').classList.remove('active');
       document.getElementById('adminTokenInput').value = '';
+      try { sessionStorage.removeItem('adminToken'); } catch(e) {}
     }
 
-    // Check if already logged in via hash
-    if (window.location.hash) {
+    // Restore token from sessionStorage or hash
+    try { token = sessionStorage.getItem('adminToken') || ''; } catch(e) {}
+    if (!token && window.location.hash) {
       token = window.location.hash.replace('#', '');
       document.getElementById('adminTokenInput').value = token;
+      try { sessionStorage.setItem('adminToken', token); } catch(e) {}
     }
 
     async function fetchStories() {
@@ -219,15 +225,22 @@
       }
     }
 
-    function copyEmail(id) {
+    async function copyEmail(id) {
       const story = allStories.find(s => s.id === id);
       if (!story) return;
-      const approveUrl = `${API_BASE}/api/approve/${story.id}?token=${token}`;
-      const rejectUrl = `${API_BASE}/api/reject/${story.id}?token=${token}`;
-      const text = `To review: "${story.title}"\n\nApprove: ${approveUrl}\nReject: ${rejectUrl}`;
-      navigator.clipboard.writeText(text).then(() => {
-        alert('URLs copied to clipboard!');
-      });
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/stories/${id}/onetimetoken`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error('Failed to generate tokens');
+        const data = await res.json();
+        const text = `To review: "${story.title}"\n\nApprove: ${data.approveUrl}\nReject: ${data.rejectUrl}`;
+        await navigator.clipboard.writeText(text);
+        alert('One-time URLs copied to clipboard!');
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
     }
 
     function escapeHtml(text) {

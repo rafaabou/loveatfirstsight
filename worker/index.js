@@ -116,13 +116,38 @@ export default {
         return jsonResponse(corsHeaders, { success: true, id: story.id });
       }
 
-      // ── GET /api/approve/:id?token= — email click-to-approve ──
+      // ── POST /api/admin/stories/:id/onetimetoken — generate one-time tokens ──
+      const oTokenMatch = url.pathname.match(/^\/api\/admin\/stories\/([a-f0-9-]+)\/onetimetoken$/);
+      if (oTokenMatch && method === 'POST') {
+        if (!authorize(request, ADMIN_TOKEN)) {
+          return jsonResponse(corsHeaders, { error: 'Unauthorized' }, 401);
+        }
+        const storyId = oTokenMatch[1];
+        const story = await getStory(KV, storyId);
+        if (!story) return jsonResponse(corsHeaders, { error: 'Story not found' }, 404);
+        const siteUrl = env.SITE_URL || CFG.SITE_URL;
+        const approveOt = crypto.randomUUID();
+        const rejectOt = crypto.randomUUID();
+        await KV.put(`token:approve:${approveOt}`, storyId, { expirationTtl: 604800 });
+        await KV.put(`token:reject:${rejectOt}`, storyId, { expirationTtl: 604800 });
+        const approveUrl = `${siteUrl}/api/approve/${storyId}?ot=${encodeURIComponent(approveOt)}`;
+        const rejectUrl = `${siteUrl}/api/reject/${storyId}?ot=${encodeURIComponent(rejectOt)}`;
+        return jsonResponse(corsHeaders, { approveUrl, rejectUrl });
+      }
+
+      // ── GET /api/approve/:id?ot= — email click-to-approve (one-time token) ──
       const emailApproveMatch = url.pathname.match(/^\/api\/approve\/([a-f0-9-]+)$/);
       if (emailApproveMatch && method === 'GET') {
-        const token = url.searchParams.get('token') || '';
-        if (!constantTimeEqual(token, ADMIN_TOKEN)) {
-          return new Response('Invalid or missing token', { status: 403 });
+        const ot = url.searchParams.get('ot') || '';
+        if (!ot) {
+          return new Response('Missing token', { status: 403 });
         }
+        const storedStoryId = await KV.get(`token:approve:${ot}`);
+        if (!storedStoryId || storedStoryId !== emailApproveMatch[1]) {
+          return new Response('Invalid or expired token', { status: 403 });
+        }
+        // Delete the one-time token immediately
+        await KV.delete(`token:approve:${ot}`);
         const story = await getStory(KV, emailApproveMatch[1]);
         if (!story) return new Response('Story not found', { status: 404 });
         story.status = 'approved';
@@ -132,13 +157,19 @@ export default {
           { headers: { 'Content-Type': 'text/html' } });
       }
 
-      // ── GET /api/reject/:id?token= — email click-to-reject ──
+      // ── GET /api/reject/:id?ot= — email click-to-reject (one-time token) ──
       const emailRejectMatch = url.pathname.match(/^\/api\/reject\/([a-f0-9-]+)$/);
       if (emailRejectMatch && method === 'GET') {
-        const token = url.searchParams.get('token') || '';
-        if (!constantTimeEqual(token, ADMIN_TOKEN)) {
-          return new Response('Invalid or missing token', { status: 403 });
+        const ot = url.searchParams.get('ot') || '';
+        if (!ot) {
+          return new Response('Missing token', { status: 403 });
         }
+        const storedStoryId = await KV.get(`token:reject:${ot}`);
+        if (!storedStoryId || storedStoryId !== emailRejectMatch[1]) {
+          return new Response('Invalid or expired token', { status: 403 });
+        }
+        // Delete the one-time token immediately
+        await KV.delete(`token:reject:${ot}`);
         const story = await getStory(KV, emailRejectMatch[1]);
         if (!story) return new Response('Story not found', { status: 404 });
         story.status = 'rejected';
@@ -378,11 +409,16 @@ async function saveStory(KV, story) {
 
 // ─── Email Notification ──────────────────────────────────────
 async function sendNotification(story, env) {
-  const token = env.ADMIN_TOKEN;
   const siteUrl = env.SITE_URL || CFG.SITE_URL;
   const emailTo = env.EMAIL_TO || CFG.EMAIL_TO;
-  const approveUrl = `${siteUrl}/api/approve/${story.id}?token=${encodeURIComponent(token)}`;
-  const rejectUrl = `${siteUrl}/api/reject/${story.id}?token=${encodeURIComponent(token)}`;
+  const KV = env.STORIES_KV;
+  // Generate one-time tokens
+  const approveOt = crypto.randomUUID();
+  const rejectOt = crypto.randomUUID();
+  await KV.put(`token:approve:${approveOt}`, story.id, { expirationTtl: 604800 });
+  await KV.put(`token:reject:${rejectOt}`, story.id, { expirationTtl: 604800 });
+  const approveUrl = `${siteUrl}/api/approve/${story.id}?ot=${encodeURIComponent(approveOt)}`;
+  const rejectUrl = `${siteUrl}/api/reject/${story.id}?ot=${encodeURIComponent(rejectOt)}`;
   const adminUrl = `${siteUrl}/admin.html`;
 
   const text = [
