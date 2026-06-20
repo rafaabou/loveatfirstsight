@@ -132,10 +132,12 @@ const translations = {
     pageTitle: { en: 'Gallery & Videos', fr: 'Galerie & Vidéos', ar: 'معرض وفيديو' },
     pageSubtitle: { en: 'Images and moments that capture the feeling of that first electric glance.', fr: 'Des images et des moments qui capturent ce premier regard électrique.', ar: 'صور ولحظات تلتقط ذلك الشعور بتلك النظرة الكهربائية الأولى.' },
     videoSection: { en: 'Romantic Videos', fr: 'Vidéos romantiques', ar: 'فيديوهات رومانسية' },
-    videoDesc: { en: 'A collection of short films and scenes that capture the magic.', fr: 'Une collection de courts métrages et de scènes qui capturent la magie.', ar: 'مجموعة من الأفلام القصيرة والمشاهد التي تلتقط السحر.' },
+    videoDesc: { en: 'Love songs and music videos that capture the feeling.', fr: 'Chansons d\'amour et clips qui capturent ce sentiment.', ar: 'أغاني الحب والفيديوهات الموسيقية التي تلتقط هذا الشعور.' },
     photoGallery: { en: 'Photo Gallery', fr: 'Galerie photo', ar: 'معرض الصور' },
     photoDesc: { en: 'Click any image to expand', fr: 'Cliquez sur une image pour agrandir', ar: 'انقر على أي صورة للتكبير' },
     videoUnavailable: { en: 'Video unavailable', fr: 'Vidéo indisponible', ar: 'الفيديو غير متاح' },
+    songsSection: { en: 'Love Songs', fr: 'Chansons d\'amour', ar: 'أغاني الحب' },
+    songsDesc: { en: 'Classic love songs that feel like that first moment.', fr: 'Des chansons d\'amour classiques qui évoquent ce premier instant.', ar: 'أغاني حب كلاسيكية تشعرك بتلك اللحظة الأولى.' },
   },
   tips: {
     pageTitle: { en: 'Tips to Make It Happen', fr: 'Conseils pour que ça arrive', ar: 'نصائح لجعلها تحدث' },
