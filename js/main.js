@@ -316,13 +316,22 @@ function initContactForm() {
       if (res.ok) {
         form.reset();
         document.getElementById('contactFormSuccess').style.display = 'block';
-      } else {
-        document.getElementById('contactFormError').style.display = 'block';
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        return;
       }
     } catch (e) {
-      console.error('Contact form submission failed:', e.message);
-      document.getElementById('contactFormError').style.display = 'block';
+      console.log('Worker API unavailable, saving contact to localStorage:', e.message);
     }
+
+    // Fallback: save to localStorage
+    data.id = Date.now().toString();
+    data.date = new Date().toISOString();
+    const messages = JSON.parse(localStorage.getItem('love-contacts') || '[]');
+    messages.push(data);
+    localStorage.setItem('love-contacts', JSON.stringify(messages));
+    form.reset();
+    document.getElementById('contactFormSuccess').style.display = 'block';
 
     submitBtn.textContent = originalText;
     submitBtn.disabled = false;

@@ -1,8 +1,0 @@
-name = "love-stories"
-main = "index.js"
-compatibility_date = "2024-12-18"
-
-[[kv_namespaces]]
-binding = "STORIES_KV"
-id = ""
-preview_id = ""
