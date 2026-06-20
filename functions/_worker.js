@@ -106,7 +106,8 @@ export default {
       return handleAdmin(request, url, method, env);
     }
 
-    return fetch(request);
+    // Serve static assets
+    return env.ASSETS.fetch(request);
   }
 };
 
