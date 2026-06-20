@@ -41,20 +41,13 @@ async function getAllStories(env, status) {
   return stories;
 }
 
-async function sendEmailNotification(env, story) {
-  if (!env.RESEND_API_KEY) return;
+async function sendTelegramNotification(env, text) {
+  if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) return;
   try {
-    const { name, email, title, content } = story;
-    const baseUrl = env.SITE_URL || 'https://loveatfirstsight.pages.dev';
-    await fetch('https://api.resend.com/emails', {
+    await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        from: env.EMAIL_FROM || 'onboarding@resend.dev',
-        to: env.EMAIL_TO || 'rafaabou@proton.me',
-        subject: `[Love Site] New Story: ${title}`,
-        html: `<h2>New Story Submitted</h2><p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email || 'Not provided'}</p><p><strong>Title:</strong> ${title}</p><p><strong>Story:</strong></p><p>${content.replace(/\n/g, '<br>')}</p><br><p><a href="${baseUrl}/admin.html">Moderate in admin panel</a></p>`,
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text, parse_mode: 'HTML' }),
     });
   } catch {}
 }
@@ -97,7 +90,7 @@ export async function onRequestPost(context) {
     const rejectToken = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).substr(2);
     await env.STORIES_KV.put(`token:approve:${approveToken}`, id, { expirationTtl: 604800 });
     await env.STORIES_KV.put(`token:reject:${rejectToken}`, id, { expirationTtl: 604800 });
-    sendEmailNotification(env, { name, email, title, content, date: story.date });
+    sendTelegramNotification(env, `📖 <b>New Story Submitted</b>\n\n<b>Name:</b> ${name}\n<b>Email:</b> ${email || 'N/A'}\n<b>Title:</b> ${title}\n\n<b>Story snippet:</b> ${content.substring(0, 300)}...\n\n<a href="${env.SITE_URL || 'https://loveatfirstsight.pages.dev'}/admin.html">Moderate in admin panel</a>`);
     return new Response(JSON.stringify({ success: true }), { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
   } catch {
     return new Response(JSON.stringify({ error: 'Invalid request' }), { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } });

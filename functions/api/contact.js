@@ -14,18 +14,13 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-async function sendEmailNotification(env, name, email, subject, message) {
-  if (!env.RESEND_API_KEY) return;
+async function sendTelegramNotification(env, text) {
+  if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) return;
   try {
-    await fetch('https://api.resend.com/emails', {
+    await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        from: env.EMAIL_FROM || 'onboarding@resend.dev',
-        to: env.EMAIL_TO || 'rafaabou@proton.me',
-        subject: `[Love Site] Contact: ${subject}`,
-        html: `<h2>New Contact Message</h2><p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email || 'Not provided'}</p><p><strong>Subject:</strong> ${subject}</p><p><strong>Message:</strong></p><p>${message.replace(/\n/g, '<br>')}</p>`,
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text, parse_mode: 'HTML' }),
     });
   } catch {}
 }
@@ -48,7 +43,7 @@ export async function onRequestPost(context) {
       const id = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).substr(2);
       await env.STORIES_KV.put(`contact:${id}`, JSON.stringify({ name, email, subject, message, date: new Date().toISOString() }));
     }
-    sendEmailNotification(env, name, email, subject, message);
+    sendTelegramNotification(env, `💌 <b>New Contact Message</b>\n\n<b>Name:</b> ${name}\n<b>Email:</b> ${email || 'N/A'}\n<b>Subject:</b> ${subject}\n<b>Message:</b> ${message}`);
     return new Response(JSON.stringify({ success: true }), { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
   } catch {
     return new Response(JSON.stringify({ error: 'Invalid request' }), { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
