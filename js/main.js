@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initBlogPost();
   setActiveNavLink();
   initRotatingQuotes();
-  initVideoHandlers();
 });
 
 function initMobileMenu() {
@@ -336,9 +335,6 @@ function initContactForm() {
     submitBtn.textContent = originalText;
     submitBtn.disabled = false;
   });
-}
-
-function initVideoHandlers() {
 }
 
 // getLang and t are provided by i18n.js — do not redefine them here
