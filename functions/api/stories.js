@@ -42,19 +42,14 @@ async function getAllStories(env, status) {
 }
 
 async function sendTelegramNotification(env, text) {
-  if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) return { sent: false, reason: 'missing_token_or_chat_id' };
+  if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) return;
   try {
-    const res = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+    await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text, parse_mode: 'HTML' }),
     });
-    const body = await res.json();
-    if (!res.ok) return { sent: false, reason: 'telegram_api_error', telegramResponse: body };
-    return { sent: true };
-  } catch (e) {
-    return { sent: false, reason: 'fetch_failed', error: e.message };
-  }
+  } catch {}
 }
 
 export async function onRequestGet(context) {
@@ -95,8 +90,8 @@ export async function onRequestPost(context) {
     const rejectToken = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).substr(2);
     await env.STORIES_KV.put(`token:approve:${approveToken}`, id, { expirationTtl: 604800 });
     await env.STORIES_KV.put(`token:reject:${rejectToken}`, id, { expirationTtl: 604800 });
-    const tgResult = await sendTelegramNotification(env, `📖 <b>New Story Submitted</b>\n\n<b>Name:</b> ${name}\n<b>Email:</b> ${email || 'N/A'}\n<b>Title:</b> ${title}\n\n<b>Story snippet:</b> ${content.substring(0, 300)}...\n\n<a href="${env.SITE_URL || 'https://loveatfirstsight.kdns.fr'}/admin.html">Moderate in admin panel</a>`);
-    return new Response(JSON.stringify({ success: true, telegram: tgResult }), { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
+    await sendTelegramNotification(env, `📖 <b>New Story Submitted</b>\n\n<b>Name:</b> ${name}\n<b>Email:</b> ${email || 'N/A'}\n<b>Title:</b> ${title}\n\n<b>Story snippet:</b> ${content.substring(0, 300)}...\n\n<a href="${env.SITE_URL || 'https://loveatfirstsight.kdns.fr'}/admin.html">Moderate in admin panel</a>`);
+    return new Response(JSON.stringify({ success: true }), { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
   } catch {
     return new Response(JSON.stringify({ error: 'Invalid request' }), { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
   }
