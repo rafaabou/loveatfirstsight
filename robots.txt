@@ -4,4 +4,4 @@ Disallow: /admin.html
 Disallow: /api/
 Disallow: /404.html
 
-Sitemap: https://loveatfirstsight.kdns.fr/sitemap.xml
+Sitemap: https://loveatfirstsight.pages.dev/sitemap.xml
