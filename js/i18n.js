@@ -226,6 +226,17 @@ function switchLang(lang) {
   updateLangButtons();
   updateThemeLabels();
   updatePageTitle();
+  reorderPoetrySections();
+}
+
+function reorderPoetrySections() {
+  const container = document.getElementById('poetrySections');
+  if (!container) return;
+  const lang = getLang();
+  const order = { en: ['en', 'fr', 'ar'], fr: ['fr', 'en', 'ar'], ar: ['ar', 'en', 'fr'] };
+  const sections = Array.from(container.querySelectorAll('[data-poetry-lang]'));
+  sections.sort((a, b) => order[lang].indexOf(a.dataset.poetryLang) - order[lang].indexOf(b.dataset.poetryLang));
+  sections.forEach(section => container.appendChild(section));
 }
 
 function updatePageTitle() {
@@ -308,7 +319,7 @@ function updateThemeLabels() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const savedLang = localStorage.getItem('love-lang') || 'en';
+  const savedLang = localStorage.getItem('love-lang') || 'ar';
   switchLang(savedLang);
 
   document.querySelectorAll('.lang-btn').forEach(btn => {
