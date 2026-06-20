@@ -88,7 +88,10 @@ export default {
     }
 
     if (url.pathname === '/api/contact' && method === 'POST') {
-      return handleContact(request);
+      return handleContact(request, env);
+    }
+    if (url.pathname === '/api/admin/contacts' && method === 'GET') {
+      return handleAdminContacts(env, request);
     }
 
     if (url.pathname === '/api/stories' && method === 'POST') {
@@ -107,7 +110,7 @@ export default {
   }
 };
 
-async function handleContact(request) {
+async function handleContact(request, env) {
   try {
     const data = await request.json();
     const name = sanitize(data.name || 'Anonymous');
@@ -124,7 +127,10 @@ async function handleContact(request) {
         status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders }
       });
     }
-    console.log('=== Contact Form Submission ===', JSON.stringify({ name, email, subject, message }, null, 2));
+    if (env.STORIES_KV) {
+      const id = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).substr(2);
+      await env.STORIES_KV.put(`contact:${id}`, JSON.stringify({ name, email, subject, message, date: new Date().toISOString() }));
+    }
     return new Response(JSON.stringify({ success: true }), {
       status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders }
     });
@@ -180,6 +186,37 @@ async function handleSubmitStory(request, env) {
       status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders }
     });
   }
+}
+
+async function handleAdminContacts(env, request) {
+  if (!env.STORIES_KV) {
+    return new Response(JSON.stringify([]), { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
+  }
+  const authHeader = request.headers.get('Authorization') || '';
+  const token = authHeader.replace('Bearer ', '');
+  if (!token || !env.ADMIN_TOKEN || !constantTimeEqual(token, env.ADMIN_TOKEN)) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
+  }
+  const messages = [];
+  let cursor = null;
+  try {
+    do {
+      const listOpts = { limit: 1000 };
+      if (cursor) listOpts.cursor = cursor;
+      const result = await env.STORIES_KV.list(listOpts);
+      cursor = result.cursor;
+      for (const key of result.keys) {
+        if (key.name.startsWith('contact:')) {
+          try {
+            const val = JSON.parse(await env.STORIES_KV.get(key.name));
+            messages.push({ id: key.name, ...val });
+          } catch {}
+        }
+      }
+    } while (cursor);
+  } catch {}
+  messages.sort((a, b) => new Date(b.date) - new Date(a.date));
+  return new Response(JSON.stringify(messages), { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
 }
 
 async function handleGetStories(env) {

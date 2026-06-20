@@ -75,6 +75,10 @@
       </div>
 
       <div class="tabs">
+        <button class="active" onclick="switchTab('stories', event)">Stories</button>
+        <button onclick="switchTab('contacts', event)">Contact Messages</button>
+      </div>
+      <div class="tabs" id="storyFilters">
         <button class="active" onclick="filterStories('all', event)">All</button>
         <button onclick="filterStories('pending', event)">Pending</button>
         <button onclick="filterStories('approved', event)">Approved</button>
@@ -83,6 +87,9 @@
 
       <div id="storiesList">
         <div class="loading">Loading stories...</div>
+      </div>
+      <div id="contactsList" style="display:none;">
+        <div class="loading">Loading contacts...</div>
       </div>
     </div>
   </div>
@@ -199,11 +206,53 @@
       renderStories();
     }
 
+    function switchTab(tab, evt) {
+      document.querySelectorAll('.tabs:first-child button').forEach(b => b.classList.remove('active'));
+      if (evt && evt.target) evt.target.classList.add('active');
+      if (tab === 'stories') {
+        document.getElementById('storyFilters').style.display = '';
+        document.getElementById('storiesList').style.display = '';
+        document.getElementById('contactsList').style.display = 'none';
+        renderStories();
+      } else {
+        document.getElementById('storyFilters').style.display = 'none';
+        document.getElementById('storiesList').style.display = 'none';
+        document.getElementById('contactsList').style.display = '';
+        fetchContacts();
+      }
+    }
+
+    async function fetchContacts() {
+      const container = document.getElementById('contactsList');
+      container.innerHTML = '<div class="loading">Loading contact messages...</div>';
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/contacts`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error('Failed to load');
+        const msgs = await res.json();
+        if (msgs.length === 0) {
+          container.innerHTML = '<div class="empty-state">No contact messages yet.</div>';
+          return;
+        }
+        container.innerHTML = msgs.map(m => `
+          <div class="admin-story">
+            <div class="meta">${escapeHtml(m.name)} &mdash; ${new Date(m.date).toLocaleString()} ${m.email ? `&mdash; <a href="mailto:${escapeHtml(m.email)}">${escapeHtml(m.email)}</a>` : ''}</div>
+            <h3>${escapeHtml(m.subject)}</h3>
+            <div class="content">${escapeHtml(m.message)}</div>
+          </div>
+        `).join('');
+      } catch (err) {
+        container.innerHTML = `<div class="error-msg">Failed to load contacts: ${err.message}</div>`;
+      }
+    }
+
     async function approveStory(id) {
       try {
-        const res = await fetch(`${API_BASE}/api/admin/stories/${id}/approve`, {
+        const res = await fetch(`${API_BASE}/api/admin/stories`, {
           method: 'PUT',
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ id, action: 'approve' })
         });
         if (!res.ok) throw new Error('Failed to approve');
         await fetchStories();
@@ -214,9 +263,10 @@
 
     async function rejectStory(id) {
       try {
-        const res = await fetch(`${API_BASE}/api/admin/stories/${id}/reject`, {
+        const res = await fetch(`${API_BASE}/api/admin/stories`, {
           method: 'PUT',
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ id, action: 'reject' })
         });
         if (!res.ok) throw new Error('Failed to reject');
         await fetchStories();
