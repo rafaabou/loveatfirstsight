@@ -11,17 +11,12 @@ function applyTheme(themeId) {
   document.documentElement.setAttribute('data-theme', themeId);
   currentTheme = themeId;
   localStorage.setItem('love-theme', themeId);
-  updateThemeButtons();
+  updateThemeActive();
 }
 
-function updateThemeButtons() {
+function updateThemeActive() {
   document.querySelectorAll('.theme-btn').forEach(btn => {
-    const id = btn.dataset.theme;
-    btn.classList.toggle('active', id === currentTheme);
-    const lang = document.documentElement.lang || 'en';
-    const label = themes.find(t => t.id === id)?.label?.[lang] || id;
-    const labelKey = lang === 'ar' ? 'ar' : lang === 'fr' ? 'fr' : 'en';
-    btn.textContent = themes.find(t => t.id === id)?.label?.[labelKey] || id;
+    btn.classList.toggle('active', btn.dataset.theme === currentTheme);
   });
 }
 
@@ -29,9 +24,7 @@ function setupThemeSwitcher() {
   applyTheme(currentTheme);
 
   document.querySelectorAll('.theme-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      applyTheme(btn.dataset.theme);
-    });
+    btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
   });
 }
 

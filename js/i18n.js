@@ -95,6 +95,9 @@ const translations = {
     pageTitle: { en: 'Poems & Quotes', fr: 'Poèmes & Citations', ar: 'شعر واقتباسات' },
     pageSubtitle: { en: 'Words that capture what the heart already knows.', fr: 'Des mots qui capturent ce que le cœur sait déjà.', ar: 'كلمات تلتقط ما يعرفه القلب بالفعل.' },
     intro: { en: "Poets have been trying to describe love at first sight for as long as there's been language. They all fail, of course. But some of them fail beautifully.", fr: "Les poètes essaient de décrire le coup de foudre depuis qu'il existe un langage. Ils échouent tous, bien sûr. Mais certains échouent magnifiquement.", ar: 'يحاول الشعراء وصف الحب من أول نظرة منذ أن وجدت اللغة. يفشلون جميعًا بالطبع. لكن بعضهم يفشل بشكل جميل.' },
+    arabicPoetry: { en: 'Arabic Poetry', fr: 'Poésie arabe', ar: 'الشعر العربي' },
+    frenchPoetry: { en: 'French Poetry', fr: 'Poésie française', ar: 'الشعر الفرنسي' },
+    englishPoetry: { en: 'English Poetry', fr: 'Poésie anglaise', ar: 'الشعر الإنجليزي' },
     poems: {
       arabic: [
         { quote: { en: '"They said: be patient. I said: love has no patience. They said: forget her. I said: the soul does not forget."', fr: '"Ils ont dit : sois patient. J\'ai dit : l\'amour n\'a pas de patience. Ils ont dit : oublie-la. J\'ai dit : l\'âme n\'oublie pas."', ar: '"قالوا: اصبر. قلت: الحب لا صبر له. قالوا: انسها. قلت: الروح لا تنسى."' }, author: { en: 'Qays ibn al-Mulawwah (Majnun)', fr: 'Qays ibn al-Mulawwah (Majnun)', ar: 'قيس بن الملوح (مجنون)' } },
@@ -122,6 +125,7 @@ const translations = {
     videoSection: { en: 'Romantic Videos', fr: 'Vidéos romantiques', ar: 'فيديوهات رومانسية' },
     videoDesc: { en: 'A collection of short films and scenes that capture the magic.', fr: 'Une collection de courts métrages et de scènes qui capturent la magie.', ar: 'مجموعة من الأفلام القصيرة والمشاهد التي تلتقط السحر.' },
     photoGallery: { en: 'Photo Gallery', fr: 'Galerie photo', ar: 'معرض الصور' },
+    photoDesc: { en: 'Click any image to expand', fr: 'Cliquez sur une image pour agrandir', ar: 'انقر على أي صورة للتكبير' },
   },
   tips: {
     pageTitle: { en: 'Tips to Make It Happen', fr: 'Conseils pour que ça arrive', ar: 'نصائح لجعلها تحدث' },
@@ -161,6 +165,7 @@ const translations = {
   blog: {
     pageTitle: { en: 'Blog', fr: 'Blog', ar: 'مدونة' },
     pageSubtitle: { en: 'Thoughts, stories, and reflections on love at first sight.', fr: 'Réflexions, histoires et pensées sur le coup de foudre.', ar: 'أفكار وقصص وتأملات عن الحب من أول نظرة.' },
+    readMore: { en: 'Read More', fr: 'Lire plus', ar: 'اقرأ المزيد' },
     posts: [
       { id: 1, title: { en: 'Did I Experience Love at First Sight?', fr: 'Ai-je vécu un coup de foudre ?', ar: 'هل عشت الحب من أول نظرة؟' }, date: { en: 'June 15, 2026', fr: '15 juin 2026', ar: '١٥ يونيو ٢٠٢٦' }, image: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600&q=80', excerpt: { en: "I've been asking myself this question for years. Here's what I've decided.", fr: "Je me suis posé cette question pendant des années. Voici ce que j'ai décidé.", ar: 'ظللت أسأل نفسي هذا السؤال لسنوات. إليكم ما قررته.' }, content: { en: "<p>I remember the exact moment. I was 22, standing in a crowded bookstore downtown, and she walked past me. I didn't know her. I'd never seen her before. But something in me stopped. Not in a dramatic, movie way. Just a quiet internal pause. Like my brain was saying: pay attention.</p><p>I didn't talk to her. She was gone before I could say anything. And I spent the next three weeks thinking about a stranger whose name I never learned.</p><p>Was that love at first sight? I used to think no — how could it be love if nothing happened? But now I think maybe it was. Maybe love at first sight doesn't always end in a relationship. Sometimes it's just a reminder that you're alive. That your heart still works. That you can still be stopped in your tracks by another human being.</p><p>I never saw her again. But I'm grateful for that moment. It reminded me that magic exists in the ordinary.</p>", fr: "<p>Je me souviens du moment exact. J'avais 22 ans, dans une librairie bondée, et elle est passée devant moi. Quelque chose en moi s'est arrêté. Pas de façon dramatique. Juste une pause intérieure silencieuse.</p><p>Était-ce un coup de foudre ? Je pensais que non. Mais maintenant je pense que oui. Peut-être que le coup de foudre ne mène pas toujours à une relation. Parfois c'est juste un rappel que vous êtes vivant.</p>", ar: "<p>أتذكر اللحظة بالضبط. كنت في الثانية والعشرين، أقف في مكتبة مزدحمة، ومرت بجانبي. توقف شيء بداخلي. ليس بطريقة درامية. مجرد توقف داخلي هادئ.</p><p>هل كان ذلك حبًا من أول نظرة؟ كنت أعتقد لا. لكن الآن أعتقد ربما نعم. ربما الحب من أول نظرة لا يؤدي دائمًا إلى علاقة. أحيانًا هو مجرد تذكير بأنك على قيد الحياة.</p>" } },
       { id: 2, title: { en: 'Love at First Sight in the Digital Age', fr: 'Le coup de foudre à l\'ère numérique', ar: 'الحب من أول نظرة في العصر الرقمي' }, date: { en: 'June 8, 2026', fr: '8 juin 2026', ar: '٨ يونيو ٢٠٢٦' }, image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&q=80', excerpt: { en: "Can you fall in love at first sight if that first sight is a profile picture?", fr: "Peut-on tomber amoureux au premier regard si ce premier regard est une photo de profil ?", ar: 'هل يمكن أن تقع في الحب من أول نظرة إذا كانت تلك النظرة الأولى صورة شخصية؟' }, content: { en: "<p>This is the question nobody asked twenty years ago. Dating apps have changed everything. We swipe based on a photo, a bio, three prompts. Is that love at first sight? Or something else entirely?</p><p>I think it's different. Swiping on an app removes the most important element: the energy of a real shared space. The air. The eye contact. The pheromones. The context. When you meet someone online, the first sight is curated. Filtered. Chosen. That's not the same as locking eyes with a stranger in a crowded room.</p><p>But here's what I find interesting: people still report feeling that jolt — that electric recognition — even when they finally meet someone from an app in person. So maybe the first sight doesn't require a physical location. Maybe it just requires the shock of seeing someone who feels like they've been waiting for you.</p>", fr: "<p>C'est la question que personne ne se posait il y a vingt ans. Les applications de rencontres ont tout changé. Est-ce un coup de foudre ? Je pense que c'est différent.</p><p>Mais voici ce que je trouve intéressant : les gens ressentent toujours ce choc — cette reconnaissance électrique — même lorsqu'ils rencontrent enfin quelqu'un d'une application en personne.</p>", ar: "<p>هذا هو السؤال الذي لم يسأله أحد قبل عشرين عامًا. تطبيقات المواعدة غيرت كل شيء. هل هذا حب من أول نظرة؟ أعتقد أنه مختلف.</p><p>لكن إليكم ما أجده مثيرًا للاهتمام: الناس لا يزالون يشعرون بتلك الصدمة — ذلك الاعتراف الكهربائي — حتى عندما يقابلون أخيرًا شخصًا من تطبيق ما شخصيًا.</p>" } },
@@ -196,41 +201,49 @@ function switchLang(lang) {
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
   localStorage.setItem('love-lang', lang);
   updatePageContent();
-  updateThemeButtons();
+  updateLangButtons();
+  updateThemeLabels();
 }
 
 function updatePageContent() {
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.dataset.i18n;
-    const translated = t(key);
-    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-      if (el.dataset.i18nPlaceholder) el.placeholder = t(el.dataset.i18nPlaceholder);
-      return;
-    }
-    if (el.tagName === 'SELECT') {
-      const options = el.querySelectorAll('option');
-      options.forEach(opt => {
-        if (opt.dataset.i18n) opt.textContent = t(opt.dataset.i18n);
-      });
-      return;
-    }
-    el.textContent = translated;
-  });
+  try {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      try {
+        const key = el.dataset.i18n;
+        const translated = t(key);
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+          if (el.dataset.i18nPlaceholder) el.placeholder = t(el.dataset.i18nPlaceholder);
+          return;
+        }
+        if (el.tagName === 'SELECT') {
+          el.querySelectorAll('option').forEach(opt => {
+            if (opt.dataset.i18n) opt.textContent = t(opt.dataset.i18n);
+          });
+          return;
+        }
+        el.textContent = translated;
+      } catch (e) {}
+    });
 
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-    el.placeholder = t(el.dataset.i18nPlaceholder);
-  });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      try { el.placeholder = t(el.dataset.i18nPlaceholder); } catch (e) {}
+    });
 
-  document.querySelectorAll('[data-i18n-value]').forEach(el => {
-    el.value = t(el.dataset.i18nValue);
-  });
+    document.querySelectorAll('[data-i18n-value]').forEach(el => {
+      try { el.value = t(el.dataset.i18nValue); } catch (e) {}
+    });
+  } catch (e) {}
+}
 
-  updateThemeButtons();
+function updateLangButtons() {
+  const lang = getLang();
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
 }
 
 function updateThemeLabels() {
   const lang = getLang();
-  if (typeof themes === 'undefined') return;
   const themeLabels = {
     romantic: { en: 'Romantic', fr: 'Romantique', ar: 'رومانسي' },
     pastel: { en: 'Pastel', fr: 'Pastel', ar: 'باستيل' },
@@ -238,9 +251,8 @@ function updateThemeLabels() {
     sunset: { en: 'Sunset', fr: 'Coucher de soleil', ar: 'غروب' },
   };
   document.querySelectorAll('.theme-btn').forEach(btn => {
-    const id = btn.dataset.theme;
-    const labels = themeLabels[id];
-    if (labels) btn.textContent = labels[lang] || id;
+    const labels = themeLabels[btn.dataset.theme];
+    if (labels) btn.textContent = labels[lang] || btn.dataset.theme;
   });
 }
 
@@ -249,9 +261,6 @@ document.addEventListener('DOMContentLoaded', () => {
   switchLang(savedLang);
 
   document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      switchLang(btn.dataset.lang);
-    });
-    btn.classList.toggle('active', btn.dataset.lang === getLang());
+    btn.addEventListener('click', () => switchLang(btn.dataset.lang));
   });
 });
