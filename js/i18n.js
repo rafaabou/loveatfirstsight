@@ -279,23 +279,32 @@ function updatePageContent() {
 
 function updateLangButtons() {
   const lang = getLang();
+  const langLabels = {
+    en: { en: 'English', fr: 'Anglais', ar: 'الإنجليزية' },
+    fr: { en: 'Français', fr: 'Français', ar: 'الفرنسية' },
+    ar: { en: 'العربية', fr: 'العربية', ar: 'العربية' },
+  };
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.lang === lang);
+    const labels = langLabels[btn.dataset.lang];
+    if (labels) btn.textContent = labels[lang] || btn.dataset.lang;
   });
 }
 
 function updateThemeLabels() {
-  const lang = getLang();
-  const themeLabels = {
-    romantic: { en: 'Romantic', fr: 'Romantique', ar: 'رومانسي' },
-    pastel: { en: 'Pastel', fr: 'Pastel', ar: 'باستيل' },
-    dark: { en: 'Dark', fr: 'Sombre', ar: 'داكن' },
-    sunset: { en: 'Sunset', fr: 'Coucher de soleil', ar: 'غروب' },
-  };
-  document.querySelectorAll('.theme-btn').forEach(btn => {
-    const labels = themeLabels[btn.dataset.theme];
-    if (labels) btn.textContent = labels[lang] || btn.dataset.theme;
-  });
+  try {
+    const lang = getLang();
+    const themeLabels = {
+      romantic: { en: 'Romantic', fr: 'Romantique', ar: 'رومانسي' },
+      pastel: { en: 'Pastel', fr: 'Pastel', ar: 'باستيل' },
+      dark: { en: 'Dark', fr: 'Sombre', ar: 'داكن' },
+      sunset: { en: 'Sunset', fr: 'Coucher de soleil', ar: 'غروب' },
+    };
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+      const labels = themeLabels[btn.dataset.theme];
+      if (labels) btn.textContent = labels[lang] || btn.dataset.theme;
+    });
+  } catch (e) {}
 }
 
 document.addEventListener('DOMContentLoaded', () => {
