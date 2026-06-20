@@ -339,15 +339,6 @@ function initContactForm() {
 }
 
 function initVideoHandlers() {
-  document.querySelectorAll('.video-wrapper').forEach(wrapper => {
-    const iframe = wrapper.querySelector('iframe');
-    const errorEl = wrapper.parentElement.querySelector('.video-error');
-    if (!iframe || !errorEl) return;
-    const showError = () => { errorEl.style.display = 'block'; };
-    iframe.addEventListener('error', showError);
-    let timer = setTimeout(showError, 10000);
-    iframe.addEventListener('load', () => clearTimeout(timer));
-  });
 }
 
 // getLang and t are provided by i18n.js — do not redefine them here
