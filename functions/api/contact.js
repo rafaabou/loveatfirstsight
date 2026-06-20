@@ -43,7 +43,7 @@ export async function onRequestPost(context) {
       const id = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).substr(2);
       await env.STORIES_KV.put(`contact:${id}`, JSON.stringify({ name, email, subject, message, date: new Date().toISOString() }));
     }
-    sendTelegramNotification(env, `💌 <b>New Contact Message</b>\n\n<b>Name:</b> ${name}\n<b>Email:</b> ${email || 'N/A'}\n<b>Subject:</b> ${subject}\n<b>Message:</b> ${message}`);
+    await sendTelegramNotification(env, `💌 <b>New Contact Message</b>\n\n<b>Name:</b> ${name}\n<b>Email:</b> ${email || 'N/A'}\n<b>Subject:</b> ${subject}\n<b>Message:</b> ${message}`);
     return new Response(JSON.stringify({ success: true }), { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
   } catch {
     return new Response(JSON.stringify({ error: 'Invalid request' }), { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
