@@ -225,6 +225,26 @@ function switchLang(lang) {
   updatePageContent();
   updateLangButtons();
   updateThemeLabels();
+  updatePageTitle();
+}
+
+function updatePageTitle() {
+  const lang = getLang();
+  const headerH1 = document.querySelector('.page-header h1');
+  if (headerH1) {
+    document.title = lang === 'ar' ? headerH1.textContent : headerH1.textContent + ' - Love at First Sight';
+    return;
+  }
+  const postTitle = document.getElementById('postTitle');
+  if (postTitle && postTitle.textContent) {
+    document.title = lang === 'ar' ? postTitle.textContent : postTitle.textContent + ' - Love at First Sight';
+    return;
+  }
+  const heroSpan = document.querySelector('.hero-content h1 span[data-i18n]');
+  if (heroSpan) {
+    document.title = lang === 'ar' ? heroSpan.textContent : heroSpan.textContent + ' - Love at First Sight';
+    return;
+  }
 }
 
 function updatePageContent() {
