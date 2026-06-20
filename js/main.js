@@ -129,7 +129,7 @@ function initShareForm() {
         return;
       }
     } catch (e) {
-      console.log('Worker API unavailable, falling back to localStorage:', e.message);
+      console.warn('Worker API unavailable, falling back to localStorage');
     }
 
     // Fallback: save to localStorage
@@ -180,7 +180,7 @@ function displayStories() {
       setTimeout(initScrollAnimations, 100);
     })
     .catch((e) => {
-      console.log('Worker API unavailable, loading stories from localStorage:', e.message);
+      console.warn('Fallback to localStorage for stories');
       // Fallback: load from localStorage
       const stories = JSON.parse(localStorage.getItem('love-stories') || '[]');
       if (stories.length === 0) {
@@ -321,7 +321,7 @@ function initContactForm() {
         return;
       }
     } catch (e) {
-      console.log('Worker API unavailable, saving contact to localStorage:', e.message);
+      console.warn('Fallback to localStorage for contact');
     }
 
     // Fallback: save to localStorage

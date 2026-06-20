@@ -31,17 +31,17 @@
 <noscript><div class="noscript-banner">JavaScript is not enabled. Some features like theme switching and translations may not work.</div></noscript>
   <header class="header" role="banner">
     <div class="header-inner">
-      <a href="index.html" class="logo">&#10084; <span>Love at First Sight</span></a>
+      <a href="index.html" class="logo">&#10084; <span data-i18n="nav.logo">Love at First Sight</span></a>
       <button class="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
   </header>
 
-  <section class="content-section" style="min-height:60vh;display:flex;align-items:center;" id="main" role="main">
+  <section class="page-header" style="min-height:60vh;display:flex;align-items:center;" id="main" role="main">
     <div class="container" style="text-align:center;">
-      <div style="font-size:6rem;color:var(--primary);margin-bottom:20px;">&#10084;</div>
-      <h1 style="font-family:var(--font-serif);font-size:3rem;color:var(--primary);margin-bottom:20px;">404</h1>
-      <p style="font-size:1.2rem;color:var(--text-light);margin-bottom:30px;max-width:500px;margin-left:auto;margin-right:auto;">This page seems to have wandered off — maybe it fell in love at first sight and forgot to come back.</p>
-      <a href="index.html" class="btn btn-primary">Go Home</a>
+      <div style="font-size:6rem;color:var(--primary);margin-bottom:20px;font-weight:700;">404</div>
+      <h1 style="font-family:var(--font-serif);font-size:3rem;color:var(--primary);margin-bottom:20px;" data-i18n="notFound.pageTitle">Page Not Found</h1>
+      <p style="font-size:1.2rem;color:var(--text-light);margin-bottom:30px;max-width:500px;margin-left:auto;margin-right:auto;" data-i18n="notFound.pageSubtitle">This page seems to have wandered off...</p>
+      <a href="index.html" class="btn" data-i18n="notFound.goHome">Go Home</a>
     </div>
   </section>
 
@@ -49,24 +49,34 @@
     <div class="footer-grid">
       <div class="footer-col">
         <h4>&#10084; Love at First Sight</h4>
-        <p style="color:var(--text-light);font-size:0.9rem;line-height:1.7;">Celebrating the magic of that one moment when two souls recognize each other.</p>
+        <p style="color:var(--text-light);font-size:0.9rem;line-height:1.7;" data-i18n="footer.tagline">Celebrating the magic of that one moment when two souls recognize each other.</p>
       </div>
       <div class="footer-col">
-        <h4>Quick Links</h4>
-        <a href="index.html">Home</a>
-        <a href="what-is.html">What Is It?</a>
-        <a href="science.html">Science</a>
-        <a href="stories.html">Stories</a>
-        <a href="poems.html">Poems & Quotes</a>
-        <a href="gallery.html">Gallery</a>
-        <a href="tips.html">Tips</a>
-        <a href="blog.html">Blog</a>
-        <a href="share.html">Share</a>
-        <a href="contact.html">Contact</a>
+        <h4 data-i18n="footer.quickLinks">Quick Links</h4>
+        <a href="index.html" data-i18n="nav.home">Home</a>
+        <a href="what-is.html" data-i18n="nav.whatIs">What Is It?</a>
+        <a href="science.html" data-i18n="nav.science">Science</a>
+        <a href="stories.html" data-i18n="nav.stories">Stories</a>
+        <a href="poems.html" data-i18n="nav.poems">Poems & Quotes</a>
+        <a href="gallery.html" data-i18n="nav.gallery">Gallery</a>
+        <a href="tips.html" data-i18n="nav.tips">Tips</a>
+        <a href="blog.html" data-i18n="nav.blog">Blog</a>
+        <a href="share.html" data-i18n="nav.share">Share</a>
+        <a href="contact.html" data-i18n="nav.contact">Contact</a>
+        <a href="privacy.html" data-i18n="nav.privacy">Privacy</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer.languages">Languages</h4>
+        <a href="#" onclick="switchLang('en');return false;">English</a>
+        <a href="#" onclick="switchLang('fr');return false;">Fran&ccedil;ais</a>
+        <a href="#" onclick="switchLang('ar');return false;">العربية</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>Love at First Sight. Made with heart. &copy; 2026. All rights reserved.</p>
+      <p>
+        <span data-i18n="footer.copyright">Love at First Sight. Made with heart.</span>
+        &copy; 2026. <span data-i18n="footer.allRights">All rights reserved.</span>
+      </p>
     </div>
   </footer>
 

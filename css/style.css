@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+
 /* ========== THEMES ========== */
 :root,
 [data-theme="romantic"] {
@@ -220,6 +222,10 @@ ul { list-style: none; }
 .hamburger.active span:nth-child(2) { opacity: 0; }
 .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
+[dir="rtl"] .hamburger.active span:nth-child(1) { transform: translate(-5px, 5px) rotate(-45deg); }
+[dir="rtl"] .hamburger.active span:nth-child(2) { opacity: 0; }
+[dir="rtl"] .hamburger.active span:nth-child(3) { transform: translate(-5px, -5px) rotate(45deg); }
+
 /* ========== NAVIGATION ========== */
 .nav {
   display: flex;
@@ -423,6 +429,8 @@ ul { list-style: none; }
   margin: 0 auto;
 }
 
+[dir="rtl"] .page-header { text-align: right; }
+
 /* ========== CONTENT SECTION ========== */
 .content-section {
   padding: 60px 0;
@@ -557,6 +565,9 @@ ul { list-style: none; }
   margin-bottom: 20px;
 }
 
+[dir="rtl"] .poem-card { text-align: right; }
+[dir="rtl"] .poem-quote { border-right: 3px solid var(--primary); border-left: none; padding-right: 20px; padding-left: 0; }
+
 /* ========== GALLERY ========== */
 .gallery-grid {
   display: grid;
@@ -647,6 +658,8 @@ ul { list-style: none; }
   box-shadow: 0 8px 30px var(--shadow);
 }
 
+[dir="rtl"] .tip-item:hover { transform: translateX(-6px); }
+
 .tip-icon {
   width: 60px;
   height: 60px;
@@ -722,6 +735,10 @@ ul { list-style: none; }
 .form-group textarea:focus {
   border-color: var(--primary);
 }
+
+[dir="rtl"] .form-group input,
+[dir="rtl"] .form-group textarea,
+[dir="rtl"] .form-group select { direction: rtl; text-align: right; }
 
 .form-group textarea {
   min-height: 160px;
@@ -839,6 +856,8 @@ ul { list-style: none; }
   margin-bottom: 15px;
 }
 
+[dir="rtl"] .blog-card-body { text-align: right; }
+
 /* ========== BLOG POST ========== */
 .blog-post-content {
   max-width: 750px;
@@ -870,6 +889,8 @@ ul { list-style: none; }
   margin-bottom: 30px;
 }
 
+[dir="rtl"] .blog-post-content { text-align: right; }
+
 .back-link {
   display: inline-flex;
   align-items: center;
@@ -880,6 +901,8 @@ ul { list-style: none; }
 }
 
 .back-link:hover { color: var(--primary); }
+
+[dir="rtl"] .back-link .arrow { display: inline-block; transform: scaleX(-1); }
 
 /* ========== FOOTER ========== */
 .footer {
@@ -954,6 +977,8 @@ ul { list-style: none; }
   border: none;
 }
 
+[dir="rtl"] .lightbox-close { right: auto; left: 30px; }
+
 /* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
   .hamburger {
@@ -962,6 +987,7 @@ ul { list-style: none; }
 
   .nav {
     position: fixed;
+    z-index: 999;
     top: 70px;
     left: 0;
     right: 0;
@@ -1008,8 +1034,8 @@ ul { list-style: none; }
   }
 
   .lang-btn, .theme-btn {
-    padding: 5px 8px;
-    font-size: 0.75rem;
+    padding: 6px 10px;
+    font-size: 0.8rem;
   }
 
   .hero {
@@ -1070,6 +1096,21 @@ ul { list-style: none; }
   top: 0;
 }
 
+.nav-links a:focus-visible,
+.lang-btn:focus-visible,
+.theme-btn:focus-visible,
+.hamburger:focus-visible,
+.submit-btn:focus-visible,
+.back-link:focus-visible,
+.card:focus-visible,
+.gallery-item:focus-visible,
+.blog-card:focus-visible,
+.story-card:focus-visible,
+.tip-item:focus-visible,
+.poem-card:focus-visible,
+.footer-col a:focus-visible,
+.lightbox-close:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+
 /* ========== NOSCRIPT ========== */
 .noscript-banner {
   background: #e74c3c;
@@ -1080,9 +1121,8 @@ ul { list-style: none; }
 }
 
 /* ========== LIGHTBOX FIXES ========== */
-.lightbox:focus {
-  outline: none;
-}
+.lightbox:focus { outline: none; }
+.lightbox-close:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
 /* ========== ANIMATIONS ========== */
 .fade-in {
@@ -1130,4 +1170,12 @@ ul { list-style: none; }
     opacity: 1;
     transform: none;
   }
+}
+
+@media print {
+  .header, .nav, .footer, .lightbox, .hamburger, .theme-btn, .lang-btn { display: none !important; }
+  .section, .page-header, .content-section { padding: 20px 0 !important; }
+  body { color: #000; background: #fff; }
+  .hero, .hero-content { min-height: auto; padding: 20px 0; background: none !important; color: #000 !important; }
+  .hero-content h1 { color: #000 !important; }
 }

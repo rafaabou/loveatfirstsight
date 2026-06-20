@@ -4,6 +4,25 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
+function getClientIP(request) {
+  return request.headers.get('CF-Connecting-IP') || 'unknown';
+}
+
+async function checkRateLimit(env, ip, endpoint) {
+  if (!env.STORIES_KV) return { allowed: true };
+  const key = `ratelimit:${ip}:${endpoint}`;
+  const count = parseInt(await env.STORIES_KV.get(key) || '0', 10);
+  if (count >= 5) {
+    return { allowed: false, retryAfter: 60 };
+  }
+  if (count === 0) {
+    await env.STORIES_KV.put(key, '1', { expirationTtl: 60 });
+  } else {
+    await env.STORIES_KV.put(key, String(count + 1), { expirationTtl: 60 });
+  }
+  return { allowed: true };
+}
+
 function sanitize(str) {
   if (!str) return '';
   return str.replace(/<[^>]*>/g, '').trim().substring(0, 5000);
@@ -27,6 +46,11 @@ async function sendTelegramNotification(env, text) {
 
 export async function onRequestPost(context) {
   const { request, env } = context;
+  const ip = getClientIP(request);
+  const rateCheck = await checkRateLimit(env, ip, 'contact-submit');
+  if (!rateCheck.allowed) {
+    return new Response(JSON.stringify({ error: 'Too many requests. Please try again later.', retryAfter: rateCheck.retryAfter }), { status: 429, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
+  }
   try {
     const data = await request.json();
     const name = sanitize(data.name || 'Anonymous');

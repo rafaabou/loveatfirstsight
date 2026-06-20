@@ -63,45 +63,45 @@
   <div class="container" id="main" role="main">
     <!-- Login -->
     <div id="loginSection" class="admin-login">
-      <h1>&#128274; Admin Login</h1>
-      <input type="password" id="adminTokenInput" placeholder="Enter admin token" autocomplete="off">
-      <button class="submit-btn" onclick="login()">Login</button>
-      <p id="loginError" style="color:#e74c3c;margin-top:10px;display:none;"></p>
+      <h1 data-i18n="admin.loginTitle">&#128274; Admin Login</h1>
+      <input type="password" id="adminTokenInput" placeholder="Enter admin token" data-i18n-placeholder="admin.tokenPlaceholder" autocomplete="off">
+      <button class="submit-btn" onclick="login()" data-i18n="admin.login">Login</button>
+      <p id="loginError" data-i18n="admin.error" style="color:#e74c3c;margin-top:10px;display:none;"></p>
     </div>
 
     <!-- Admin Panel -->
     <div id="adminPanel" class="admin-panel">
       <div class="admin-header">
-        <h1>&#10084; Love Stories — Moderation</h1>
+        <h1 data-i18n="admin.title">&#10084; Love Stories — Moderation</h1>
         <div>
           <span id="serverStatus" style="font-size:0.85rem;color:var(--text-light);margin-right:15px;"></span>
-          <span class="logout" onclick="logout()">Logout</span>
+          <span class="logout" onclick="logout()" data-i18n="admin.logout">Logout</span>
         </div>
       </div>
 
       <div class="admin-stats" id="statsContainer">
-        <div class="stat-card"><div class="num" id="statTotal">0</div><div class="label">Total</div></div>
-        <div class="stat-card"><div class="num" id="statPending">0</div><div class="label">Pending</div></div>
-        <div class="stat-card"><div class="num" id="statApproved">0</div><div class="label">Approved</div></div>
-        <div class="stat-card"><div class="num" id="statRejected">0</div><div class="label">Rejected</div></div>
+        <div class="stat-card"><div class="num" id="statTotal">0</div><div class="label" data-i18n="admin.total">Total</div></div>
+        <div class="stat-card"><div class="num" id="statPending">0</div><div class="label" data-i18n="admin.pending">Pending</div></div>
+        <div class="stat-card"><div class="num" id="statApproved">0</div><div class="label" data-i18n="admin.approved">Approved</div></div>
+        <div class="stat-card"><div class="num" id="statRejected">0</div><div class="label" data-i18n="admin.rejected">Rejected</div></div>
       </div>
 
       <div class="tabs">
-        <button class="active" onclick="switchTab('stories', event)">Stories</button>
-        <button onclick="switchTab('contacts', event)">Contact Messages</button>
+        <button class="active" onclick="switchTab('stories', event)" data-i18n="admin.storiesTab">Stories</button>
+        <button onclick="switchTab('contacts', event)" data-i18n="admin.contactsTab">Contact Messages</button>
       </div>
       <div class="tabs" id="storyFilters">
-        <button class="active" onclick="filterStories('all', event)">All</button>
-        <button onclick="filterStories('pending', event)">Pending</button>
-        <button onclick="filterStories('approved', event)">Approved</button>
-        <button onclick="filterStories('rejected', event)">Rejected</button>
+        <button class="active" onclick="filterStories('all', event)" data-i18n="admin.allFilter">All</button>
+        <button onclick="filterStories('pending', event)" data-i18n="admin.pendingFilter">Pending</button>
+        <button onclick="filterStories('approved', event)" data-i18n="admin.approvedFilter">Approved</button>
+        <button onclick="filterStories('rejected', event)" data-i18n="admin.rejectedFilter">Rejected</button>
       </div>
 
       <div id="storiesList">
-        <div class="loading">Loading stories...</div>
+        <div class="loading" data-i18n="admin.loadingStories">Loading stories...</div>
       </div>
       <div id="contactsList" style="display:none;">
-        <div class="loading">Loading contacts...</div>
+        <div class="loading" data-i18n="admin.loadingContacts">Loading contacts...</div>
       </div>
     </div>
   </div>
