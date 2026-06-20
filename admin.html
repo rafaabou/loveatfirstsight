@@ -47,7 +47,7 @@
 <body>
 <a href="#main" class="skip-link">Skip to content</a>
 <noscript><div class="noscript-banner">JavaScript is not enabled. Some features like theme switching and translations may not work.</div></noscript>
-  <div class="container">
+  <div class="container" id="main" role="main">
     <!-- Login -->
     <div id="loginSection" class="admin-login">
       <h1>&#128274; Admin Login</h1>
@@ -74,10 +74,10 @@
       </div>
 
       <div class="tabs">
-        <button class="active" onclick="filterStories('all')">All</button>
-        <button onclick="filterStories('pending')">Pending</button>
-        <button onclick="filterStories('approved')">Approved</button>
-        <button onclick="filterStories('rejected')">Rejected</button>
+        <button class="active" onclick="filterStories('all', event)">All</button>
+        <button onclick="filterStories('pending', event)">Pending</button>
+        <button onclick="filterStories('approved', event)">Approved</button>
+        <button onclick="filterStories('rejected', event)">Rejected</button>
       </div>
 
       <div id="storiesList">
@@ -96,7 +96,7 @@
       token = document.getElementById('adminTokenInput').value.trim();
       if (!token) return;
       document.getElementById('loginError').style.display = 'none';
-      try { sessionStorage.setItem('adminToken', token); } catch(e) {}
+      try { sessionStorage.setItem('adminToken', token); } catch(e) { console.warn('Cannot save token to sessionStorage:', e.message); }
       fetchStories();
     }
 
@@ -106,15 +106,14 @@
       document.getElementById('loginSection').style.display = 'block';
       document.getElementById('adminPanel').classList.remove('active');
       document.getElementById('adminTokenInput').value = '';
-      try { sessionStorage.removeItem('adminToken'); } catch(e) {}
+      try { sessionStorage.removeItem('adminToken'); } catch(e) { console.warn('Cannot remove token from sessionStorage:', e.message); }
+      window.location.hash = '';
     }
 
-    // Restore token from sessionStorage or hash
-    try { token = sessionStorage.getItem('adminToken') || ''; } catch(e) {}
-    if (!token && window.location.hash) {
-      token = window.location.hash.replace('#', '');
+    // Restore token from sessionStorage only (not URL hash — security risk)
+    try { token = sessionStorage.getItem('adminToken') || ''; } catch(e) { console.warn('Cannot read token from sessionStorage:', e.message); }
+    if (token) {
       document.getElementById('adminTokenInput').value = token;
-      try { sessionStorage.setItem('adminToken', token); } catch(e) {}
     }
 
     async function fetchStories() {
@@ -178,7 +177,7 @@
             <div class="meta">
               <span class="badge ${badgeClass}">${s.status}</span>
               &mdash; ${s.name} &mdash; ${date} &mdash; <strong>${s.lang}</strong>
-              ${s.email ? `&mdash; <a href="mailto:${s.email}">${s.email}</a>` : ''}
+              ${s.email ? `&mdash; <a href="mailto:${escapeHtml(s.email)}">${escapeHtml(s.email)}</a>` : ''}
             </div>
             <h3>${escapeHtml(s.title)}</h3>
             <div class="content">${escapeHtml(s.content)}</div>
@@ -192,10 +191,10 @@
       }).join('');
     }
 
-    function filterStories(filter) {
+    function filterStories(filter, evt) {
       currentFilter = filter;
       document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
+      if (evt && evt.target) evt.target.classList.add('active');
       renderStories();
     }
 

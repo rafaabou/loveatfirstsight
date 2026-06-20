@@ -34,7 +34,8 @@ export default {
       const KV = env.STORIES_KV;
       const ADMIN_TOKEN = env.ADMIN_TOKEN;
       if (!ADMIN_TOKEN) {
-        return jsonResponse(corsHeaders, { error: 'Server misconfigured: ADMIN_TOKEN not set' }, 500);
+        console.error('ADMIN_TOKEN not set');
+        return jsonResponse(corsHeaders, { error: 'Internal server error' }, 500);
       }
 
       // ── Rate limiting (KV-based) ──
@@ -242,8 +243,9 @@ async function checkRateLimit(KV, ip) {
 
     await KV.put(key, JSON.stringify(data), { expirationTtl: window * 2 });
     return true;
-  } catch {
-    return true;
+  } catch (e) {
+    console.error('Rate limit check failed:', e.message);
+    return true;  // fail open
   }
 }
 
@@ -272,6 +274,10 @@ function validateContactInput(body) {
 }
 
 async function sendContactEmail(data, env) {
+  const method = env.EMAIL_METHOD || CFG.EMAIL_METHOD;
+  if (method === 'console') {
+    console.warn('[WARN] Console email method used — contact messages will not be delivered via email.');
+  }
   const emailTo = env.EMAIL_TO || CFG.EMAIL_TO;
   const siteUrl = env.SITE_URL || CFG.SITE_URL;
 
@@ -385,15 +391,19 @@ function sanitizeStoryPublic(story) {
 
 // ─── KV Helpers ──────────────────────────────────────────────
 async function getAllStories(KV) {
-  const list = await KV.list({ prefix: 'story:' });
   const stories = [];
-  for (const key of list.keys) {
-    const val = await KV.get(key.name);
-    if (val) {
-      try { stories.push(JSON.parse(val)); }
-      catch { continue; }
+  let cursor;
+  do {
+    const list = await KV.list({ prefix: 'story:', cursor, limit: 1000 });
+    for (const key of list.keys) {
+      const val = await KV.get(key.name);
+      if (val) {
+        try { stories.push(JSON.parse(val)); }
+        catch (e) { console.warn('Failed to parse story:', key.name, e.message); }
+      }
     }
-  }
+    cursor = list.cursor;
+  } while (cursor);
   return stories;
 }
 
@@ -409,6 +419,10 @@ async function saveStory(KV, story) {
 
 // ─── Email Notification ──────────────────────────────────────
 async function sendNotification(story, env) {
+  const method = env.EMAIL_METHOD || CFG.EMAIL_METHOD;
+  if (method === 'console') {
+    console.warn('[WARN] Console email method used — messages will not be delivered via email. Set EMAIL_METHOD to "resend" or "mailgun" in production.');
+  }
   const siteUrl = env.SITE_URL || CFG.SITE_URL;
   const emailTo = env.EMAIL_TO || CFG.EMAIL_TO;
   const KV = env.STORIES_KV;

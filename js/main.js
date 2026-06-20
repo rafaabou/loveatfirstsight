@@ -55,16 +55,21 @@ function initGalleryLightbox() {
   const lightboxImg = lightbox?.querySelector('img');
   const closeBtn = lightbox?.querySelector('.lightbox-close');
   if (!lightbox) return;
+  let lastFocused = null;
 
-  const closeLightbox = () => lightbox.classList.remove('active');
+  const closeLightbox = () => {
+    lightbox.classList.remove('active');
+    if (lastFocused) lastFocused.focus();
+  };
 
   document.querySelectorAll('.gallery-item').forEach(item => {
     item.addEventListener('click', () => {
       const img = item.querySelector('img');
       if (!img) return;
+      lastFocused = item;
       lightboxImg.src = img.dataset.full || img.src;
       lightbox.classList.add('active');
-      lightbox.focus();
+      closeBtn?.focus();
     });
   });
 
@@ -77,8 +82,11 @@ function initGalleryLightbox() {
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && lightbox.classList.contains('active')) {
-      closeLightbox();
+    if (!lightbox.classList.contains('active')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      if (closeBtn) closeBtn.focus();
     }
   });
 }
@@ -120,7 +128,7 @@ function initShareForm() {
         return;
       }
     } catch (e) {
-      // Worker not deployed — fall through to localStorage
+      console.log('Worker API unavailable, falling back to localStorage:', e.message);
     }
 
     // Fallback: save to localStorage
@@ -136,7 +144,7 @@ function initShareForm() {
     const success = document.getElementById('formSuccess');
     if (success) {
       success.style.display = 'block';
-      success.textContent = 'Thank you! Your story has been shared (local).';
+      success.textContent = t('share.localSuccess');
       setTimeout(() => { success.style.display = 'none'; }, 4000);
     }
 
@@ -170,7 +178,8 @@ function displayStories() {
       `).join('');
       setTimeout(initScrollAnimations, 100);
     })
-    .catch(() => {
+    .catch((e) => {
+      console.log('Worker API unavailable, loading stories from localStorage:', e.message);
       // Fallback: load from localStorage
       const stories = JSON.parse(localStorage.getItem('love-stories') || '[]');
       if (stories.length === 0) {
@@ -283,7 +292,7 @@ function initContactForm() {
 
     const submitBtn = form.querySelector('.submit-btn');
     const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'Sending...';
+    submitBtn.textContent = t('contact.form.sending');
     submitBtn.disabled = true;
 
     document.getElementById('contactFormSuccess').style.display = 'none';
@@ -302,7 +311,8 @@ function initContactForm() {
       } else {
         document.getElementById('contactFormError').style.display = 'block';
       }
-    } catch {
+    } catch (e) {
+      console.error('Contact form submission failed:', e.message);
       document.getElementById('contactFormError').style.display = 'block';
     }
 

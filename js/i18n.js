@@ -11,6 +11,7 @@ const translations = {
     share: { en: 'Share', fr: 'Partager', ar: 'شارك' },
     contact: { en: 'Contact', fr: 'Contact', ar: 'اتصل بنا' },
     privacy: { en: 'Privacy', fr: 'Confidentialité', ar: 'الخصوصية' },
+    siteName: { en: 'Love at First Sight', fr: 'Le Coup de Foudre', ar: 'الحب من أول نظرة' },
   },
   footer: {
     tagline: { en: 'Celebrating the magic of that one moment when two souls recognize each other.', fr: 'Célébrer la magie de cet instant où deux âmes se reconnaissent.', ar: 'احتفاء بسحر تلك اللحظة التي تتعرف فيها روحان على بعضهما.' },
@@ -160,6 +161,8 @@ const translations = {
       storyPlaceholder: { en: 'Tell us about that moment when your eyes met...', fr: 'Racontez-nous ce moment où vos yeux se sont croisés...', ar: 'أخبرنا عن تلك اللحظة التي تلاقت فيها عيونكما...' },
       submit: { en: 'Share Your Story', fr: 'Partagez votre histoire', ar: 'شارك قصتك' },
       success: { en: 'Thank you! Your story has been shared.', fr: 'Merci ! Votre histoire a été partagée.', ar: 'شكرًا لك! تم مشاركة قصتك.' },
+      sending: { en: 'Sending...', fr: 'Envoi...', ar: 'جارٍ الإرسال...' },
+      localSuccess: { en: 'Thank you! Your story has been shared (local).', fr: 'Merci ! Votre histoire a été partagée (local).', ar: 'شكرًا لك! تمت مشاركة قصتك (محلي).' },
     },
     wallTitle: { en: 'Love Stories Wall', fr: 'Mur des histoires d\'amour', ar: 'جدار قصص الحب' },
     empty: { en: 'No stories yet. Be the first to share!', fr: 'Pas encore d\'histoires. Soyez le premier à partager !', ar: 'لا توجد قصص بعد. كن أول من يشارك!' },
@@ -194,6 +197,7 @@ const translations = {
       message: { en: 'Message', fr: 'Message', ar: 'الرسالة' },
       messagePlaceholder: { en: 'Write your message here...', fr: 'Écrivez votre message ici...', ar: 'اكتب رسالتك هنا...' },
       submit: { en: 'Send Message', fr: 'Envoyer le message', ar: 'أرسل الرسالة' },
+      sending: { en: 'Sending...', fr: 'Envoi...', ar: 'جارٍ الإرسال...' },
       success: { en: 'Thank you! Your message has been sent. We will get back to you soon.', fr: 'Merci ! Votre message a été envoyé. Nous vous répondrons bientôt.', ar: 'شكرًا لك! تم إرسال رسالتك. سنعود إليك قريبًا.' },
       error: { en: 'Sorry, something went wrong. Please try again or email us directly at rafaabou@proton.me.', fr: 'Désolé, une erreur s\'est produite. Veuillez réessayer ou nous envoyer un email directement à rafaabou@proton.me.', ar: 'عذرًا، حدث خطأ ما. يرجى المحاولة مرة أخرى أو مراسلتنا مباشرة على rafaabou@proton.me.' },
     },
@@ -215,6 +219,7 @@ function t(key) {
     if (obj && obj[k]) obj = obj[k];
     else return key;
   }
+  if (Array.isArray(obj)) return obj;
   if (obj && typeof obj === 'object' && obj[lang] !== undefined) return obj[lang];
   return obj && obj.en !== undefined ? obj.en : key;
 }
@@ -242,19 +247,20 @@ function reorderPoetrySections() {
 
 function updatePageTitle() {
   const lang = getLang();
+  const siteName = t('nav.siteName');
   const headerH1 = document.querySelector('.page-header h1');
   if (headerH1) {
-    document.title = lang === 'ar' ? headerH1.textContent : headerH1.textContent + ' - Love at First Sight';
+    document.title = lang === 'ar' ? headerH1.textContent : headerH1.textContent + ' - ' + siteName;
     return;
   }
   const postTitle = document.getElementById('postTitle');
   if (postTitle && postTitle.textContent) {
-    document.title = lang === 'ar' ? postTitle.textContent : postTitle.textContent + ' - Love at First Sight';
+    document.title = lang === 'ar' ? postTitle.textContent : postTitle.textContent + ' - ' + siteName;
     return;
   }
   const heroSpan = document.querySelector('.hero-content h1 span[data-i18n]');
   if (heroSpan) {
-    document.title = lang === 'ar' ? heroSpan.textContent : heroSpan.textContent + ' - Love at First Sight';
+    document.title = lang === 'ar' ? heroSpan.textContent : heroSpan.textContent + ' - ' + siteName;
     return;
   }
 }
@@ -276,17 +282,17 @@ function updatePageContent() {
           return;
         }
         el.textContent = translated;
-      } catch (e) {}
+      } catch (e) { console.warn('i18n content update failed:', e.message); }
     });
 
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-      try { el.placeholder = t(el.dataset.i18nPlaceholder); } catch (e) {}
+      try { el.placeholder = t(el.dataset.i18nPlaceholder); } catch (e) { console.warn('i18n placeholder failed:', e.message); }
     });
 
     document.querySelectorAll('[data-i18n-value]').forEach(el => {
-      try { el.value = t(el.dataset.i18nValue); } catch (e) {}
+      try { el.value = t(el.dataset.i18nValue); } catch (e) { console.warn('i18n value failed:', e.message); }
     });
-  } catch (e) {}
+  } catch (e) { console.warn('updatePageContent failed:', e.message); }
 }
 
 function updateLangButtons() {
@@ -316,7 +322,7 @@ function updateThemeLabels() {
       const labels = themeLabels[btn.dataset.theme];
       if (labels) btn.textContent = labels[lang] || btn.dataset.theme;
     });
-  } catch (e) {}
+  } catch (e) { console.warn('updateThemeLabels failed:', e.message); }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

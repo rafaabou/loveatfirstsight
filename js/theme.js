@@ -1,10 +1,3 @@
-const themes = [
-  { id: 'romantic', label: { en: 'Romantic', fr: 'Romantique', ar: 'رومانسي' } },
-  { id: 'pastel', label: { en: 'Pastel', fr: 'Pastel', ar: 'باستيل' } },
-  { id: 'dark', label: { en: 'Dark', fr: 'Sombre', ar: 'داكن' } },
-  { id: 'sunset', label: { en: 'Sunset', fr: 'Coucher de soleil', ar: 'غروب' } },
-];
-
 let currentTheme = localStorage.getItem('love-theme') || 'romantic';
 
 function applyTheme(themeId) {
