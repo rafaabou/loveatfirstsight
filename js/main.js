@@ -71,23 +71,50 @@ function initGalleryLightbox() {
   });
 }
 
+const API_BASE = window.location.origin;
+
 function initShareForm() {
   const form = document.getElementById('shareForm');
   if (!form) return;
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const story = {
-      id: Date.now(),
       name: document.getElementById('storyName')?.value || 'Anonymous',
+      email: document.getElementById('storyEmail')?.value || '',
       title: document.getElementById('storyTitle')?.value || 'Untitled',
       lang: document.getElementById('storyLang')?.value || 'en',
       content: document.getElementById('storyContent')?.value || '',
-      date: new Date().toISOString(),
     };
 
     if (!story.content.trim()) return;
+
+    // Try Worker API first, fall back to localStorage
+    try {
+      const res = await fetch(`${API_BASE}/api/stories`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(story),
+      });
+      if (res.ok) {
+        form.reset();
+        const success = document.getElementById('formSuccess');
+        if (success) {
+          success.style.display = 'block';
+          setTimeout(() => { success.style.display = 'none'; }, 4000);
+        }
+        displayStories();
+        return;
+      }
+    } catch (e) {
+      // Worker not deployed — fall through to localStorage
+    }
+
+    // Fallback: save to localStorage
+    story.id = Date.now().toString();
+    story.date = new Date().toISOString();
+    story.status = 'approved';
 
     const stories = JSON.parse(localStorage.getItem('love-stories') || '[]');
     stories.unshift(story);
@@ -97,6 +124,7 @@ function initShareForm() {
     const success = document.getElementById('formSuccess');
     if (success) {
       success.style.display = 'block';
+      success.textContent = 'Thank you! Your story has been shared (local).';
       setTimeout(() => { success.style.display = 'none'; }, 4000);
     }
 
@@ -110,25 +138,42 @@ function displayStories() {
   const wall = document.getElementById('storiesWall');
   if (!wall) return;
 
-  const stories = JSON.parse(localStorage.getItem('love-stories') || '[]');
-
-  if (stories.length === 0) {
-    wall.innerHTML = `<p style="text-align:center;color:var(--text-light);padding:40px;" data-i18n="share.empty">${t('share.empty')}</p>`;
-    return;
-  }
-
-  wall.innerHTML = stories.map(s => {
-    const date = new Date(s.date).toLocaleDateString();
-    return `
-      <div class="submitted-story fade-in">
-        <h4>${escapeHtml(s.title)}</h4>
-        <div class="meta">${escapeHtml(s.name)} &mdash; ${date}</div>
-        <p>${escapeHtml(s.content)}</p>
-      </div>
-    `;
-  }).join('');
-
-  setTimeout(initScrollAnimations, 100);
+  // Try Worker API first
+  fetch(`${API_BASE}/api/stories`)
+    .then(res => {
+      if (!res.ok) throw new Error('Worker not available');
+      return res.json();
+    })
+    .then(stories => {
+      if (stories.length === 0) {
+        wall.innerHTML = `<p style="text-align:center;color:var(--text-light);padding:40px;">${t('share.empty')}</p>`;
+        return;
+      }
+      wall.innerHTML = stories.map(s => `
+        <div class="submitted-story fade-in">
+          <h4>${escapeHtml(s.title)}</h4>
+          <div class="meta">${escapeHtml(s.name)} &mdash; ${new Date(s.date).toLocaleDateString()}</div>
+          <p>${escapeHtml(s.content)}</p>
+        </div>
+      `).join('');
+      setTimeout(initScrollAnimations, 100);
+    })
+    .catch(() => {
+      // Fallback: load from localStorage
+      const stories = JSON.parse(localStorage.getItem('love-stories') || '[]');
+      if (stories.length === 0) {
+        wall.innerHTML = `<p style="text-align:center;color:var(--text-light);padding:40px;">${t('share.empty')}</p>`;
+        return;
+      }
+      wall.innerHTML = stories.map(s => `
+        <div class="submitted-story fade-in">
+          <h4>${escapeHtml(s.title)}</h4>
+          <div class="meta">${escapeHtml(s.name)} &mdash; ${new Date(s.date).toLocaleDateString()}</div>
+          <p>${escapeHtml(s.content)}</p>
+        </div>
+      `).join('');
+      setTimeout(initScrollAnimations, 100);
+    });
 }
 
 function escapeHtml(text) {
@@ -189,19 +234,4 @@ function initRotatingQuotes() {
   }, 5000);
 }
 
-function getLang() {
-  return document.documentElement.lang || 'en';
-}
-
-function t(key) {
-  if (typeof window.t === 'function') return window.t(key);
-  const lang = getLang();
-  const keys = key.split('.');
-  let obj = window.translations;
-  for (const k of keys) {
-    if (obj && obj[k]) obj = obj[k];
-    else return key;
-  }
-  if (obj && typeof obj === 'object' && obj[lang] !== undefined) return obj[lang];
-  return obj && obj.en !== undefined ? obj.en : key;
-}
+// getLang and t are provided by i18n.js — do not redefine them here
