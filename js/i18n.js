@@ -12,7 +12,7 @@ const translations = {
     contact: { en: 'Contact', fr: 'Contact', ar: 'اتصل بنا' },
     privacy: { en: 'Privacy', fr: 'Confidentialité', ar: 'الخصوصية' },
     siteName: { en: 'Love at First Sight', fr: 'Le Coup de Foudre', ar: 'الحب من أول نظرة' },
-    logo: { en: 'Love at First Sight', fr: 'Love at First Sight', ar: 'الحب من أول نظرة' },
+    logo: { en: '\u2665 Love at First Sight', fr: '\u2665 Love at First Sight', ar: '\u2665 \u0627\u0644\u062d\u0628 \u0645\u0646 \u0623\u0648\u0644 \u0646\u0638\u0631\u0629' },
   },
   footer: {
     tagline: { en: 'Celebrating the magic of that one moment when two souls recognize each other.', fr: 'Célébrer la magie de cet instant où deux âmes se reconnaissent.', ar: 'احتفاء بسحر تلك اللحظة التي تتعرف فيها روحان على بعضهما.' },
@@ -249,9 +249,32 @@ const translations = {
     approve: { en: 'Approve', fr: 'Approuver', ar: 'موافقة' },
     reject: { en: 'Reject', fr: 'Rejeter', ar: 'رفض' },
     copyEmailUrl: { en: 'Copy Email URL', fr: 'Copier l\'URL d\'email', ar: 'نسخ رابط البريد' },
+    connected: { en: 'Connected', fr: 'Connecté', ar: 'متصل' },
+    connecting: { en: 'Connecting...', fr: 'Connexion...', ar: 'جارٍ الاتصال...' },
+    offline: { en: 'Offline', fr: 'Hors ligne', ar: 'غير متصل' },
+    serverError: { en: 'Server error: ', fr: 'Erreur serveur : ', ar: 'خطأ في الخادم: ' },
+    invalidToken: { en: 'Invalid token. Try again.', fr: 'Jeton invalide. Réessayez.', ar: 'رمز غير صالح. حاول مرة أخرى.' },
+    cannotConnect: { en: 'Cannot connect to server. Is the Worker deployed?', fr: 'Impossible de se connecter au serveur. Le Worker est-il déployé ?', ar: 'لا يمكن الاتصال بالخادم. هل العامل منشور؟' },
+    failedLoadContacts: { en: 'Failed to load contacts: ', fr: 'Échec du chargement des contacts : ', ar: 'فشل تحميل جهات الاتصال: ' },
+    errorAlert: { en: 'Error: ', fr: 'Erreur : ', ar: 'خطأ: ' },
+    clipboardSuccess: { en: 'One-time URLs copied to clipboard!', fr: 'URLs à usage unique copiées dans le presse-papiers !', ar: 'تم نسخ الروابط لمرة واحدة إلى الحافظة!' },
   },
   lightbox: {
     close: { en: 'Close image viewer', fr: 'Fermer la visionneuse', ar: 'إغلاق معاينة الصورة' },
+  },
+  common: {
+    skipToContent: { en: 'Skip to content', fr: 'Passer au contenu', ar: 'تخطي إلى المحتوى' },
+    mainNavigation: { en: 'Main navigation', fr: 'Navigation principale', ar: 'التنقل الرئيسي' },
+    menu: { en: 'Menu', fr: 'Menu', ar: 'القائمة' },
+    noscript: { en: 'JavaScript is not enabled. Some features like theme switching and translations may not work.', fr: 'JavaScript n\'est pas activé. Certaines fonctionnalités comme le changement de thème et les traductions peuvent ne pas fonctionner.', ar: 'جافا سكريبت غير مفعلة. بعض الميزات مثل تبديل السمة والترجمات قد لا تعمل.' },
+    loading: { en: 'Loading...', fr: 'Chargement...', ar: 'جار التحميل...' },
+    nextScience: { en: 'Next: The Science Behind It →', fr: 'Suivant : La science derrière tout ça →', ar: 'التالي: العلم وراء ذلك ←' },
+    nextStories: { en: 'Next: Famous Love Stories →', fr: 'Suivant : Histoires d\'amour célèbres →', ar: 'التالي: قصص حب شهيرة ←' },
+    nextPoems: { en: 'Next: Poems & Quotes →', fr: 'Suivant : Poèmes & Citations →', ar: 'التالي: شعر واقتباسات ←' },
+    nextGallery: { en: 'Next: Gallery & Videos →', fr: 'Suivant : Galerie & Vidéos →', ar: 'التالي: معرض وفيديو ←' },
+    nextShare: { en: 'Next: Share Your Story →', fr: 'Suivant : Partagez votre histoire →', ar: 'التالي: شارك قصتك ←' },
+    lightboxAlt: { en: 'Expanded gallery image', fr: 'Image agrandie de la galerie', ar: 'الصورة الموسعة من المعرض' },
+    lightboxViewer: { en: 'Image viewer', fr: 'Visionneuse d\'images', ar: 'عارض الصور' },
   },
   privacy: {
     pageTitle: { en: 'Privacy Policy', fr: 'Politique de confidentialité', ar: 'سياسة الخصوصية' },
@@ -357,6 +380,10 @@ function updatePageContent() {
 
     document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
       try { el.setAttribute('aria-label', t(el.dataset.i18nAriaLabel)); } catch (e) { console.warn('i18n aria-label failed:', e.message); }
+    });
+
+    document.querySelectorAll('[data-i18n-alt]').forEach(el => {
+      try { el.alt = t(el.dataset.i18nAlt); } catch (e) { console.warn('i18n alt failed:', e.message); }
     });
   } catch (e) { console.warn('updatePageContent failed:', e.message); }
 }

@@ -58,8 +58,8 @@
   </style>
 </head>
 <body>
-<a href="#main" class="skip-link">Skip to content</a>
-<noscript><div class="noscript-banner">JavaScript is not enabled. Some features like theme switching and translations may not work.</div></noscript>
+<a href="#main" class="skip-link" data-i18n="common.skipToContent">Skip to content</a>
+<noscript><div class="noscript-banner" data-i18n="common.noscript">JavaScript is not enabled. Some features like theme switching and translations may not work.</div></noscript>
   <div class="container" id="main" role="main">
     <!-- Login -->
     <div id="loginSection" class="admin-login">
@@ -106,6 +106,7 @@
     </div>
   </div>
 
+  <script src="js/i18n.js"></script>
   <script>
     const API_BASE = window.location.origin;
     let token = '';
@@ -137,8 +138,8 @@
     }
 
     async function fetchStories() {
-      document.getElementById('storiesList').innerHTML = '<div class="loading">Loading stories...</div>';
-      document.getElementById('serverStatus').textContent = 'Connecting...';
+      document.getElementById('storiesList').innerHTML = '<div class="loading">' + t('admin.loadingStories') + '</div>';
+      document.getElementById('serverStatus').textContent = t('admin.connecting');
 
       try {
         const res = await fetch(`${API_BASE}/api/admin/stories`, {
@@ -147,22 +148,22 @@
 
         if (!res.ok) {
           if (res.status === 401) {
-            document.getElementById('loginError').textContent = 'Invalid token. Try again.';
+            document.getElementById('loginError').textContent = t('admin.invalidToken');
             document.getElementById('loginError').style.display = 'block';
             return;
           }
-          throw new Error('Server error: ' + res.status);
+          throw new Error(t('admin.serverError') + res.status);
         }
 
         allStories = await res.json();
         document.getElementById('loginSection').style.display = 'none';
         document.getElementById('adminPanel').classList.add('active');
-        document.getElementById('serverStatus').textContent = 'Connected';
+        document.getElementById('serverStatus').textContent = t('admin.connected');
         renderStories();
       } catch (err) {
         document.getElementById('storiesList').innerHTML =
-          `<div class="error-msg">Cannot connect to server. Is the Worker deployed?<br><small>${err.message}</small></div>`;
-        document.getElementById('serverStatus').textContent = 'Offline';
+          `<div class="error-msg">${t('admin.cannotConnect')}<br><small>${err.message}</small></div>`;
+        document.getElementById('serverStatus').textContent = t('admin.offline');
       }
     }
 
@@ -185,7 +186,7 @@
       const container = document.getElementById('storiesList');
 
       if (filtered.length === 0) {
-        container.innerHTML = '<div class="empty-state">No stories in this category.</div>';
+        container.innerHTML = '<div class="empty-state">' + t('admin.noStories') + '</div>';
         return;
       }
 
@@ -202,9 +203,9 @@
             <h3>${escapeHtml(s.title)}</h3>
             <div class="content">${escapeHtml(s.content)}</div>
             <div class="actions">
-              ${s.status !== 'approved' ? `<button class="btn-approve" onclick="approveStory('${s.id}')">&#10003; Approve</button>` : ''}
-              ${s.status !== 'rejected' ? `<button class="btn-reject" onclick="rejectStory('${s.id}')">&#10007; Reject</button>` : ''}
-              <button class="btn-email" onclick="copyEmail('${s.id}')">&#128231; Copy Email URL</button>
+              ${s.status !== 'approved' ? `<button class="btn-approve" onclick="approveStory('${s.id}')">&#10003; ${t('admin.approve')}</button>` : ''}
+              ${s.status !== 'rejected' ? `<button class="btn-reject" onclick="rejectStory('${s.id}')">&#10007; ${t('admin.reject')}</button>` : ''}
+              <button class="btn-email" onclick="copyEmail('${s.id}')">&#128231; ${t('admin.copyEmailUrl')}</button>
             </div>
           </div>
         `;
@@ -236,7 +237,7 @@
 
     async function fetchContacts() {
       const container = document.getElementById('contactsList');
-      container.innerHTML = '<div class="loading">Loading contact messages...</div>';
+      container.innerHTML = '<div class="loading">' + t('admin.loadingContacts') + '</div>';
       try {
         const res = await fetch(`${API_BASE}/api/admin/contacts`, {
           headers: { 'Authorization': `Bearer ${token}` }
@@ -244,7 +245,7 @@
         if (!res.ok) throw new Error('Failed to load');
         const msgs = await res.json();
         if (msgs.length === 0) {
-          container.innerHTML = '<div class="empty-state">No contact messages yet.</div>';
+          container.innerHTML = '<div class="empty-state">' + t('admin.noContacts') + '</div>';
           return;
         }
         container.innerHTML = msgs.map(m => `
@@ -255,7 +256,7 @@
           </div>
         `).join('');
       } catch (err) {
-        container.innerHTML = `<div class="error-msg">Failed to load contacts: ${err.message}</div>`;
+        container.innerHTML = `<div class="error-msg">${t('admin.failedLoadContacts')}${err.message}</div>`;
       }
     }
 
@@ -269,7 +270,7 @@
         if (!res.ok) throw new Error('Failed to approve');
         await fetchStories();
       } catch (err) {
-        alert('Error: ' + err.message);
+        alert(t('admin.errorAlert') + err.message);
       }
     }
 
@@ -283,7 +284,7 @@
         if (!res.ok) throw new Error('Failed to reject');
         await fetchStories();
       } catch (err) {
-        alert('Error: ' + err.message);
+        alert(t('admin.errorAlert') + err.message);
       }
     }
 
@@ -298,9 +299,9 @@
         if (!res.ok) throw new Error('Failed to generate tokens');
         const data = await res.json();
         const baseUrl = window.location.origin;
-        const text = `To review: "${story.title}"\n\nApprove: ${baseUrl}/api/admin/stories?action=approve&token=${data.approveToken}\nReject: ${baseUrl}/api/admin/stories?action=reject&token=${data.rejectToken}`;
+        const text = `To review: "${story.title}"\n\n${t('admin.approve')}: ${baseUrl}/api/admin/stories?action=approve&token=${data.approveToken}\n${t('admin.reject')}: ${baseUrl}/api/admin/stories?action=reject&token=${data.rejectToken}`;
         await navigator.clipboard.writeText(text);
-        alert('One-time URLs copied to clipboard!');
+        alert(t('admin.clipboardSuccess'));
       } catch (err) {
         alert('Error: ' + err.message);
       }
