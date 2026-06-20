@@ -2,12 +2,22 @@
   "lifetime": {
     "totalTokens": 0,
     "reads": 0,
-    "writes": 68,
-    "sessions": 0,
+    "writes": 78,
+    "sessions": 1,
     "anatomyHits": 0,
     "anatomyMisses": 0,
     "repeatedBlocked": 0,
     "savings": 0
   },
-  "sessions": []
+  "sessions": [
+    {
+      "sessionID": "ses_11b11b4b7ffeaMdlOfaR7VpL2K",
+      "date": "2026-06-20T12:08:02.697Z",
+      "tokens": 0,
+      "reads": 0,
+      "writes": 0,
+      "anatomyHits": 0,
+      "repeatedBlocked": 0
+    }
+  ]
 }
