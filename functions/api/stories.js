@@ -90,7 +90,7 @@ export async function onRequestPost(context) {
     const rejectToken = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).substr(2);
     await env.STORIES_KV.put(`token:approve:${approveToken}`, id, { expirationTtl: 604800 });
     await env.STORIES_KV.put(`token:reject:${rejectToken}`, id, { expirationTtl: 604800 });
-    sendTelegramNotification(env, `📖 <b>New Story Submitted</b>\n\n<b>Name:</b> ${name}\n<b>Email:</b> ${email || 'N/A'}\n<b>Title:</b> ${title}\n\n<b>Story snippet:</b> ${content.substring(0, 300)}...\n\n<a href="${env.SITE_URL || 'https://loveatfirstsight.pages.dev'}/admin.html">Moderate in admin panel</a>`);
+    sendTelegramNotification(env, `📖 <b>New Story Submitted</b>\n\n<b>Name:</b> ${name}\n<b>Email:</b> ${email || 'N/A'}\n<b>Title:</b> ${title}\n\n<b>Story snippet:</b> ${content.substring(0, 300)}...\n\n<a href="${env.SITE_URL || 'https://loveatfirstsight.kdns.fr'}/admin.html">Moderate in admin panel</a>`);
     return new Response(JSON.stringify({ success: true }), { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
   } catch {
     return new Response(JSON.stringify({ error: 'Invalid request' }), { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
