@@ -2,3 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 Disallow: /api/
+Disallow: /404.html
+
+Sitemap: https://loveatfirstsight.pages.dev/sitemap.xml
