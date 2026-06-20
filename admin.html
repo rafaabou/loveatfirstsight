@@ -201,7 +201,7 @@
 
     function filterStories(filter, evt) {
       currentFilter = filter;
-      document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+      document.getElementById('storyFilters').querySelectorAll('button').forEach(b => b.classList.remove('active'));
       if (evt && evt.target) evt.target.classList.add('active');
       renderStories();
     }
