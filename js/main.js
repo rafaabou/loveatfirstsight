@@ -349,6 +349,22 @@ function switchTab(tab) {
   });
 }
 
+function reorderTabs(lang) {
+  const container = document.querySelector('.lang-tabs');
+  if (!container) return;
+  const tabs = Array.from(container.querySelectorAll('.lang-tab'));
+  const order = {
+    ar: ['arabic', 'french', 'english'],
+    fr: ['french', 'english', 'arabic'],
+    en: ['english', 'french', 'arabic'],
+  };
+  const wanted = order[lang] || order.ar;
+  wanted.forEach(tab => {
+    const btn = tabs.find(b => b.dataset.tab === tab);
+    if (btn) container.appendChild(btn);
+  });
+}
+
 document.querySelectorAll('.lang-tab').forEach(btn => {
   btn.addEventListener('click', () => switchTab(btn.dataset.tab));
 });
@@ -358,5 +374,8 @@ const origSwitchLang = window.switchLang;
 window.switchLang = function(lang) {
   origSwitchLang(lang);
   const map = { ar: 'arabic', fr: 'french', en: 'english' };
-  if (map[lang]) switchTab(map[lang]);
+  if (map[lang]) {
+    switchTab(map[lang]);
+    reorderTabs(lang);
+  }
 };
