@@ -338,3 +338,25 @@ function initContactForm() {
 }
 
 // getLang and t are provided by i18n.js — do not redefine them here
+
+// ========== GALLERY TABS ==========
+function switchTab(tab) {
+  document.querySelectorAll('.lang-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === tab);
+  });
+  document.querySelectorAll('#songGrid .fade-in').forEach(el => {
+    el.style.display = el.dataset.lang === tab ? '' : 'none';
+  });
+}
+
+document.querySelectorAll('.lang-tab').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+// Auto-switch tab when site language changes
+const origSwitchLang = window.switchLang;
+window.switchLang = function(lang) {
+  origSwitchLang(lang);
+  const map = { ar: 'arabic', fr: 'french', en: 'english' };
+  if (map[lang]) switchTab(map[lang]);
+};

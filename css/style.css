@@ -1172,6 +1172,48 @@ ul { list-style: none; }
   }
 }
 
+/* ========== LANGUAGE TABS ========== */
+.lang-tabs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.lang-tab {
+  background: none;
+  border: 2px solid var(--border);
+  color: var(--text);
+  padding: 10px 24px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.lang-tab:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.lang-tab.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.lang-tab:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.video-grid .fade-in[data-lang]:not([data-lang="arabic"]) {
+  display: none;
+}
+
 @media print {
   .header, .nav, .footer, .lightbox, .hamburger, .theme-btn, .lang-btn { display: none !important; }
   .section, .page-header, .content-section { padding: 20px 0 !important; }
