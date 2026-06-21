@@ -204,6 +204,8 @@ const translations = {
       namePlaceholder: { en: 'Enter your name', fr: 'Entrez votre nom', ar: 'أدخل اسمك' },
       email: { en: 'Your Email', fr: 'Votre email', ar: 'بريدك الإلكتروني' },
       emailPlaceholder: { en: 'Enter your email', fr: 'Entrez votre email', ar: 'أدخل بريدك الإلكتروني' },
+      phone: { en: 'Phone Number', fr: 'Numéro de téléphone', ar: 'رقم الهاتف' },
+      phonePlaceholder: { en: 'Enter your phone number (optional)', fr: 'Entrez votre numéro de téléphone (optionnel)', ar: 'أدخل رقم هاتفك (اختياري)' },
       subject: { en: 'Subject', fr: 'Sujet', ar: 'الموضوع' },
       subjectPlaceholder: { en: 'What is this about?', fr: 'De quoi s\'agit-il ?', ar: 'عن ماذا يتعلق؟' },
       message: { en: 'Message', fr: 'Message', ar: 'الرسالة' },
