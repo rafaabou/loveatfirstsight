@@ -134,8 +134,6 @@ const translations = {
     photoGallery: { en: 'Photo Gallery', fr: 'Galerie photo', ar: 'معرض الصور' },
     photoDesc: { en: 'Click any image to expand', fr: 'Cliquez sur une image pour agrandir', ar: 'انقر على أي صورة للتكبير' },
     videoUnavailable: { en: 'Video unavailable', fr: 'Vidéo indisponible', ar: 'الفيديو غير متاح' },
-    songSection: { en: 'Love Songs', fr: 'Chansons d\'amour', ar: 'أغاني الحب' },
-    songDesc: { en: 'Love songs from around the world that capture that first moment.', fr: 'Chansons d\'amour du monde entier qui capturent ce premier instant.', ar: 'أغاني حب من جميع أنحاء العالم تلتقط تلك اللحظة الأولى.' },
     tabArabic: { en: 'Arabic', fr: 'Arabe', ar: 'العربية' },
     tabFrench: { en: 'French', fr: 'Français', ar: 'الفرنسية' },
     tabEnglish: { en: 'English', fr: 'Anglais', ar: 'الإنجليزية' },

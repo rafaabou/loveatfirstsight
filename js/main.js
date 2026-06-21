@@ -345,7 +345,7 @@ function switchTab(tab) {
     btn.classList.toggle('active', btn.dataset.tab === tab);
   });
   document.querySelectorAll('#songGrid .fade-in').forEach(el => {
-    el.style.display = el.dataset.lang === tab ? '' : 'none';
+    el.style.display = el.dataset.lang === tab ? 'block' : 'none';
   });
 }
 

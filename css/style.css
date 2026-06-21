@@ -1210,10 +1210,6 @@ ul { list-style: none; }
   outline-offset: 2px;
 }
 
-.video-grid .fade-in[data-lang]:not([data-lang="arabic"]) {
-  display: none;
-}
-
 @media print {
   .header, .nav, .footer, .lightbox, .hamburger, .theme-btn, .lang-btn { display: none !important; }
   .section, .page-header, .content-section { padding: 20px 0 !important; }
